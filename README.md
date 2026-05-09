@@ -51,11 +51,10 @@ cp .env.example .env
 
 ```sh
 make build       # npm run build → web/dist, then go build → bin/server
-set -a; source .env; set +a
 make run         # or: ./bin/server
 ```
 
-Open <http://localhost:8080>. One process, one port.
+Open <http://localhost:8080>.
 
 ## Run (development, with HMR)
 
@@ -64,12 +63,8 @@ separately. Vite serves on `:5173` and proxies `/api/*` to the Go server
 on `:8080`.
 
 ```sh
-# Terminal 1
-set -a; source .env; set +a
-make dev-server
-
-# Terminal 2
-make dev-web
+make dev-server   # terminal 1
+make dev-web      # terminal 2
 ```
 
 Open <http://localhost:5173>.
