@@ -129,7 +129,7 @@ export function App() {
         <h2>Audit trail</h2>
         <EverscribeEvents
           tokenEndpoint="/api/embed-token"
-          pollInterval={3000}
+          pollInterval={1000}
           theme="light"
         />
       </section>

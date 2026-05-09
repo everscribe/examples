@@ -54,13 +54,13 @@ make build       # npm run build → web/dist, then go build → bin/server
 make run         # or: ./bin/server
 ```
 
-Open <http://localhost:8080>.
+Open <http://localhost:9000>.
 
 ## Run (development, with HMR)
 
 If you want React hot-reload while iterating, run the two halves
 separately. Vite serves on `:5173` and proxies `/api/*` to the Go server
-on `:8080`.
+on `:9000`.
 
 ```sh
 make dev-server   # terminal 1

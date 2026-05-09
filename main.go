@@ -175,7 +175,7 @@ func main() {
 type Config struct {
 	ProjectID string `env:"EVERSCRIBE_PROJECT_ID,required"`
 	APIKey    string `env:"EVERSCRIBE_API_KEY,required"`
-	Port      string `env:"PORT,default=8080"`
+	Port      string `env:"PORT,default=9000"`
 	TenantID  string `env:"TENANT_ID,default=tenant_demo"`
 }
 
