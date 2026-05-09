@@ -25,6 +25,7 @@ import (
 	"github.com/everscribe/sdk-go/pkg/event"
 	"github.com/everscribe/sdk-go/pkg/minter"
 	"github.com/everscribe/sdk-go/pkg/recorder"
+	"github.com/fuskovic/env"
 )
 
 // staticFS holds the built React app. `npm run build` from web/ writes to
@@ -115,9 +116,12 @@ func (s *store) remove(id string) (*User, error) {
 var errNotFound = errors.New("user not found")
 
 func main() {
-	cfg := loadConfig()
+	cfg, err := loadConfig()
+	if err != nil {
+		log.Fatalf("config: %v", err)
+	}
 
-	es, err := everscribe.New(cfg.projectID, cfg.apiKey)
+	es, err := everscribe.New(cfg.ProjectID, cfg.APIKey)
 	if err != nil {
 		log.Fatalf("everscribe.New: %v", err)
 	}
@@ -142,15 +146,15 @@ func main() {
 		writeJSON(w, http.StatusOK, map[string]string{"status": "ok"})
 	})
 	apiMux.HandleFunc("GET /api/users", listUsers(users))
-	apiMux.HandleFunc("POST /api/users", inviteUser(users, rec))
-	apiMux.HandleFunc("PATCH /api/users/{id}/role", changeRole(users, rec))
-	apiMux.HandleFunc("DELETE /api/users/{id}", removeUser(users, rec))
-	apiMux.HandleFunc("GET /api/embed-token", embedToken(mint, cfg.tenantID))
+	apiMux.HandleFunc("POST /api/users", inviteUser(users, rec, cfg.TenantID))
+	apiMux.HandleFunc("PATCH /api/users/{id}/role", changeRole(users, rec, cfg.TenantID))
+	apiMux.HandleFunc("DELETE /api/users/{id}", removeUser(users, rec, cfg.TenantID))
+	apiMux.HandleFunc("GET /api/embed-token", embedToken(mint, cfg.TenantID))
 
 	// Audit middleware populates the per-request Event template (Origin
 	// from the request, Actor from our resolver). In a real app the
 	// resolver reads session state; here we hard-code the demo admin.
-	auditMW := event.NewMiddleware(demoActorResolver(cfg.tenantID))
+	auditMW := event.NewMiddleware(demoActorResolver())
 	apiHandler := auditMW(apiMux)
 
 	root := http.NewServeMux()
@@ -159,48 +163,39 @@ func main() {
 
 	handler := http.Handler(root)
 
-	log.Printf("listening on http://localhost:%s (project=%s tenant=%s)", cfg.port, cfg.projectID, cfg.tenantID)
-	if err := http.ListenAndServe(":"+cfg.port, handler); err != nil {
+	log.Printf("listening on http://localhost:%s (project=%s tenant=%s)", cfg.Port, cfg.ProjectID, cfg.TenantID)
+	if err := http.ListenAndServe(":"+cfg.Port, handler); err != nil {
 		log.Fatal(err)
 	}
 }
 
-type config struct {
-	projectID string
-	apiKey    string
-	port      string
-	tenantID  string
+// Config is loaded from a .env file in the working directory if one
+// exists, otherwise from the process environment. The "required" tag on
+// the credentials surfaces a clear error at startup if they're missing.
+type Config struct {
+	ProjectID string `env:"EVERSCRIBE_PROJECT_ID,required"`
+	APIKey    string `env:"EVERSCRIBE_API_KEY,required"`
+	Port      string `env:"PORT,default=8080"`
+	TenantID  string `env:"TENANT_ID,default=tenant_demo"`
 }
 
-func loadConfig() config {
-	cfg := config{
-		projectID: os.Getenv("EVERSCRIBE_PROJECT_ID"),
-		apiKey:    os.Getenv("EVERSCRIBE_API_KEY"),
-		port:      os.Getenv("PORT"),
-		tenantID:  os.Getenv("TENANT_ID"),
+func loadConfig() (*Config, error) {
+	var cfg Config
+	if _, err := os.Stat(".env"); err == nil {
+		return &cfg, env.UnmarshalFromFile(".env", &cfg)
 	}
-	if cfg.projectID == "" || cfg.apiKey == "" {
-		log.Fatal("EVERSCRIBE_PROJECT_ID and EVERSCRIBE_API_KEY must be set (see .env.example)")
-	}
-	if cfg.port == "" {
-		cfg.port = "8080"
-	}
-	if cfg.tenantID == "" {
-		cfg.tenantID = "tenant_demo"
-	}
-	return cfg
+	return &cfg, env.Unmarshal(&cfg)
 }
 
 // demoActorResolver returns a fixed Actor representing the logged-in
 // admin running this demo. A real app would parse a session/JWT/etc.
-func demoActorResolver(tenantID string) event.ActorResolver {
+func demoActorResolver() event.ActorResolver {
 	actor := event.Actor{
 		Type:        "user",
 		ID:          "u_demo_admin",
 		DisplayName: "Demo Admin",
 		Email:       "admin@example.com",
 	}
-	_ = tenantID
 	return func(_ context.Context) event.Actor { return actor }
 }
 
@@ -210,10 +205,10 @@ func listUsers(s *store) http.HandlerFunc {
 	}
 }
 
-func inviteUser(s *store, rec recorder.Recorder) http.HandlerFunc {
+func inviteUser(s *store, rec recorder.Recorder, tenantID string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		e := event.FromContext(r.Context())
-		e.TenantID = tenantFromCtx(r)
+		e.TenantID = tenantID
 		defer func() { _ = rec.Record(r.Context(), e) }()
 
 		var in struct {
@@ -245,11 +240,11 @@ func inviteUser(s *store, rec recorder.Recorder) http.HandlerFunc {
 	}
 }
 
-func changeRole(s *store, rec recorder.Recorder) http.HandlerFunc {
+func changeRole(s *store, rec recorder.Recorder, tenantID string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		id := r.PathValue("id")
 		e := event.FromContext(r.Context())
-		e.TenantID = tenantFromCtx(r)
+		e.TenantID = tenantID
 		e.Target = event.Target{Type: "user", ID: id}
 		defer func() { _ = rec.Record(r.Context(), e) }()
 
@@ -274,11 +269,11 @@ func changeRole(s *store, rec recorder.Recorder) http.HandlerFunc {
 	}
 }
 
-func removeUser(s *store, rec recorder.Recorder) http.HandlerFunc {
+func removeUser(s *store, rec recorder.Recorder, tenantID string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		id := r.PathValue("id")
 		e := event.FromContext(r.Context())
-		e.TenantID = tenantFromCtx(r)
+		e.TenantID = tenantID
 		e.Target = event.Target{Type: "user", ID: id}
 		defer func() { _ = rec.Record(r.Context(), e) }()
 
@@ -309,16 +304,6 @@ func embedToken(m *minter.Client, tenantID string) http.HandlerFunc {
 		}
 		writeJSON(w, http.StatusOK, map[string]string{"token": token})
 	}
-}
-
-// tenantFromCtx hardcodes the demo tenant. In a real app it'd come from
-// the session via the audit middleware's actor resolver, or a separate
-// tenant resolver — but a single-tenant demo doesn't need that.
-func tenantFromCtx(r *http.Request) string {
-	if v := os.Getenv("TENANT_ID"); v != "" {
-		return v
-	}
-	return "tenant_demo"
 }
 
 func writeJSON(w http.ResponseWriter, status int, v any) {
