@@ -16,7 +16,6 @@ run: build
 	./$(BIN)
 
 # Development: two processes with hot reload.
-# Run `make dev-web` and `make dev-server` in separate terminals.
 # Vite serves on :5173 and proxies /api/* to the Go server on :9000.
 dev-web:
 	cd web && npm run dev
