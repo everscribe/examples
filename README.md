@@ -20,14 +20,14 @@ both the React app and the API on one port.
 
 ```
 examples/
-├── server/              Go HTTP server (port 8080)
-│   ├── go.mod           replace → ../../sdk-go
-│   ├── main.go          //go:embed all:static
-│   └── static/          ← Vite writes its build output here
-└── web/                 Vite + React + TS
-    ├── package.json     @everscribe/events-react → file:../../events-react
-    ├── vite.config.ts   build.outDir = ../server/static
-    └── src/
+├── go.mod         module github.com/everscribe/examples (replace → ../sdk-go)
+├── main.go        //go:embed all:web/dist
+├── Makefile
+└── web/           Vite + React + TS
+    ├── package.json   @everscribe/events-react → file:../../events-react
+    ├── vite.config.ts
+    ├── src/
+    └── dist/      ← Vite output, embedded into the binary
 ```
 
 Both libraries are referenced locally — `replace` directive in `go.mod`,
@@ -50,7 +50,7 @@ cp .env.example .env
 ## Run (single binary)
 
 ```sh
-make build       # builds web/ into server/static, then compiles the Go binary
+make build       # npm run build → web/dist, then go build → bin/server
 set -a; source .env; set +a
 make run         # or: ./bin/server
 ```
@@ -89,13 +89,13 @@ endpoint. The token is scoped to `tenant_id=tenant_demo` and
 
 ## Where things live
 
-- Static embed: [server/main.go](server/main.go) → `//go:embed all:static`
-  + `newStaticHandler`
-- Token mint: [server/main.go](server/main.go) → `embedToken` handler
+- Static embed: [main.go](main.go) → `//go:embed all:web/dist` +
+  `newStaticHandler`
+- Token mint: [main.go](main.go) → `embedToken` handler
 - Audit middleware (populates Actor/Origin per request):
-  [server/main.go](server/main.go) → `event.NewMiddleware(...)`
+  [main.go](main.go) → `event.NewMiddleware(...)`
 - Recording on mutation:
-  [server/main.go](server/main.go) → `inviteUser`, `changeRole`,
-  `removeUser` use the `defer rec.Record(...)` idiom
+  [main.go](main.go) → `inviteUser`, `changeRole`, `removeUser` use the
+  `defer rec.Record(...)` idiom
 - Component mount: [web/src/App.tsx](web/src/App.tsx) →
   `<EverscribeEvents tokenEndpoint="/api/embed-token" />`
