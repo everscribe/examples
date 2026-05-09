@@ -1,0 +1,266 @@
+:root {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  color: #1a1a1a;
+  background: #f4f4f7;
+}
+
+* { box-sizing: border-box; }
+
+body { margin: 0; }
+
+.app {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 32px 24px 72px;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.topbar h1 { margin: 0; font-size: 26px; }
+
+.subtitle { margin: 4px 0 0; color: #666; font-size: 13px; }
+
+.who {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  color: #555;
+}
+
+.who select {
+  font-size: 14px;
+  padding: 6px 10px;
+}
+
+input, select, button {
+  font: inherit;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background: #fff;
+}
+
+button {
+  background: #111;
+  color: #fff;
+  border-color: #111;
+  cursor: pointer;
+}
+
+button.danger { background: #fff; color: #b00020; border-color: #e7c5cb; }
+
+/* Panels with corner labels make it visually obvious which parts are
+   "your code" vs the embedded Everscribe component. */
+.panel {
+  position: relative;
+  background: #fff;
+  border: 1px solid #e2e2e2;
+  border-radius: 12px;
+  margin-bottom: 24px;
+}
+
+.panel.labeled { border-color: #1a1a1a; }
+
+.label-corner {
+  position: absolute;
+  top: -12px;
+  left: 16px;
+  padding: 4px 10px;
+  font-size: 11px;
+  line-height: 1.4;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #fff;
+  background: #1a1a1a;
+  border-radius: 6px;
+  white-space: nowrap;
+  z-index: 1;
+}
+
+.label-corner code { background: rgba(255,255,255,0.15); padding: 1px 4px; border-radius: 3px; }
+
+.panel-body { padding: 24px 20px; }
+
+.panel-body h2 {
+  margin: 0 0 12px;
+  font-size: 16px;
+}
+
+.panel-body h2 + .create-form { margin-bottom: 28px; }
+
+.create-form {
+  display: grid;
+  grid-template-columns: 1fr 2fr auto;
+  gap: 8px;
+}
+
+table.secrets { width: 100%; border-collapse: collapse; }
+
+table.secrets th, table.secrets td {
+  text-align: left;
+  padding: 10px 8px;
+  border-bottom: 1px solid #eee;
+  vertical-align: middle;
+}
+
+table.secrets th {
+  font-weight: 600;
+  color: #666;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.secrets td.actions { display: flex; gap: 6px; flex-wrap: wrap; }
+
+.secrets td.actions button {
+  padding: 4px 8px;
+  font-size: 12px;
+}
+
+.secrets tr.revoked { opacity: 0.5; }
+
+.secrets code {
+  background: #f1f1f4;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+.badge {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 6px;
+  font-size: 11px;
+  background: #eef0fb;
+  color: #4a4ab0;
+  border-radius: 3px;
+}
+
+.error {
+  background: #fdecec;
+  color: #8a1010;
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.error button {
+  background: transparent;
+  color: #8a1010;
+  border: 1px solid #8a1010;
+  padding: 2px 8px;
+  font-size: 12px;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+.modal {
+  background: #fff;
+  padding: 24px;
+  border-radius: 10px;
+  max-width: 480px;
+  width: 100%;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+}
+
+.modal h3 { margin: 0 0 8px; font-size: 18px; }
+
+.modal pre {
+  background: #1a1a1a;
+  color: #e1e1e1;
+  padding: 12px;
+  border-radius: 6px;
+  overflow-x: auto;
+  font-size: 13px;
+  margin: 12px 0;
+}
+
+.modal .hint { color: #666; font-size: 13px; margin: 0 0 16px; }
+
+.modal .hint code {
+  background: #f1f1f4;
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-size: 12px;
+}
+
+.modal form > input,
+.modal form .field {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.modal form .field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+  color: #555;
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.modal-buttons button.secondary {
+  background: #fff;
+  color: #1a1a1a;
+  border-color: #ccc;
+}
+
+.modal-buttons button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.share-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.share-list button {
+  width: 100%;
+  text-align: left;
+  background: #fff;
+  color: #1a1a1a;
+  border: 1px solid #ddd;
+  padding: 10px 12px;
+}
+
+.share-list button:hover {
+  border-color: #1a1a1a;
+}
+
+.share-list .role {
+  color: #888;
+  font-size: 12px;
+  margin-left: 4px;
+}
