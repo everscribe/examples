@@ -2,7 +2,7 @@
 //
 // Exposes a tiny in-memory team API that records every mutation as an
 // audit event via sdk-go's Recorder, plus an embed-token endpoint that
-// the React frontend uses to authenticate <EverscribeEvents />.
+// the React frontend uses to authenticate <AuditTrail />.
 package main
 
 import (
