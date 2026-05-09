@@ -7,9 +7,11 @@ package main
 
 import (
 	"context"
+	"embed"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io/fs"
 	"log"
 	"log/slog"
 	"net/http"
@@ -24,6 +26,13 @@ import (
 	"github.com/everscribe/sdk-go/pkg/minter"
 	"github.com/everscribe/sdk-go/pkg/recorder"
 )
+
+// staticFS holds the built React app. Vite is configured (web/vite.config.ts)
+// to write its dist output to ./static, so `npm run build` from web/ refreshes
+// what gets baked into the binary.
+//
+//go:embed all:static
+var staticFS embed.FS
 
 // User is a team member in the in-memory store.
 type User struct {
@@ -124,22 +133,32 @@ func main() {
 
 	users := newStore()
 
-	mux := http.NewServeMux()
-	mux.HandleFunc("GET /api/health", func(w http.ResponseWriter, _ *http.Request) {
+	staticHandler, err := newStaticHandler()
+	if err != nil {
+		log.Fatalf("static fs: %v", err)
+	}
+
+	apiMux := http.NewServeMux()
+	apiMux.HandleFunc("GET /api/health", func(w http.ResponseWriter, _ *http.Request) {
 		writeJSON(w, http.StatusOK, map[string]string{"status": "ok"})
 	})
-	mux.HandleFunc("GET /api/users", listUsers(users))
-	mux.HandleFunc("POST /api/users", inviteUser(users, rec))
-	mux.HandleFunc("PATCH /api/users/{id}/role", changeRole(users, rec))
-	mux.HandleFunc("DELETE /api/users/{id}", removeUser(users, rec))
-	mux.HandleFunc("GET /api/embed-token", embedToken(mint, cfg.tenantID))
+	apiMux.HandleFunc("GET /api/users", listUsers(users))
+	apiMux.HandleFunc("POST /api/users", inviteUser(users, rec))
+	apiMux.HandleFunc("PATCH /api/users/{id}/role", changeRole(users, rec))
+	apiMux.HandleFunc("DELETE /api/users/{id}", removeUser(users, rec))
+	apiMux.HandleFunc("GET /api/embed-token", embedToken(mint, cfg.tenantID))
 
 	// Audit middleware populates the per-request Event template (Origin
 	// from the request, Actor from our resolver). In a real app the
 	// resolver reads session state; here we hard-code the demo admin.
 	auditMW := event.NewMiddleware(demoActorResolver(cfg.tenantID))
+	apiHandler := auditMW(apiMux)
 
-	handler := withCORS(auditMW(mux))
+	root := http.NewServeMux()
+	root.Handle("/api/", apiHandler)
+	root.Handle("/", staticHandler)
+
+	handler := http.Handler(root)
 
 	log.Printf("listening on http://localhost:%s (project=%s tenant=%s)", cfg.port, cfg.projectID, cfg.tenantID)
 	if err := http.ListenAndServe(":"+cfg.port, handler); err != nil {
@@ -309,22 +328,12 @@ func writeJSON(w http.ResponseWriter, status int, v any) {
 	_ = json.NewEncoder(w).Encode(v)
 }
 
-// withCORS allows the Vite dev server (default :5173) to call the API
-// during development. Adjust or remove for production.
-func withCORS(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		origin := r.Header.Get("Origin")
-		if origin != "" {
-			w.Header().Set("Access-Control-Allow-Origin", origin)
-			w.Header().Set("Vary", "Origin")
-			w.Header().Set("Access-Control-Allow-Credentials", "true")
-			w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS")
-			w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-		}
-		if r.Method == http.MethodOptions {
-			w.WriteHeader(http.StatusNoContent)
-			return
-		}
-		next.ServeHTTP(w, r)
-	})
+// newStaticHandler serves the embedded React build. fs.Sub strips the
+// "static/" prefix so requests to "/" map to the embedded index.html.
+func newStaticHandler() (http.Handler, error) {
+	sub, err := fs.Sub(staticFS, "static")
+	if err != nil {
+		return nil, err
+	}
+	return http.FileServer(http.FS(sub)), nil
 }
