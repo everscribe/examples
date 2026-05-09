@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from 'react'
-import { EverscribeEvents } from '@everscribe/events-react'
+import { AuditTrail } from '@everscribe/components-react'
 import { api, type User } from './api.js'
 
 const ROLES = ['admin', 'member', 'viewer']
@@ -127,7 +127,7 @@ export function App() {
 
       <section className="panel">
         <h2>Audit trail</h2>
-        <EverscribeEvents
+        <AuditTrail
           tokenEndpoint="/api/embed-token"
           pollInterval={1000}
           theme="light"
