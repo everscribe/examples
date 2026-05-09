@@ -310,7 +310,18 @@ export function App() {
               </p>
               <AuditTrail
                 key={`customer-${myTenant?.id ?? 'none'}`}
-                tokenEndpoint="/api/embed-token/customer"
+                onTokenExpired={async () => {
+                  // Customer endpoint reads X-Demo-Actor to know the
+                  // actor's tenant. The component's built-in tokenEndpoint
+                  // fetcher only sends `credentials: 'include'`, so we
+                  // need this callback to attach our header.
+                  const res = await fetch('/api/embed-token/customer', {
+                    headers: { 'X-Demo-Actor': getActorId() },
+                  })
+                  if (!res.ok) throw new Error(`mint failed: ${res.status}`)
+                  const body = (await res.json()) as { token: string }
+                  return body.token
+                }}
                 pollInterval={1000}
                 theme="light"
                 defaultTimeRange="7d"
