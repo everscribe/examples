@@ -10,7 +10,7 @@ web:
 
 server:
 	mkdir -p bin
-	cd server && go build -o ../$(BIN) .
+	go build -o $(BIN) .
 
 run: build
 	./$(BIN)
@@ -22,9 +22,7 @@ dev-web:
 	cd web && npm run dev
 
 dev-server:
-	cd server && go run .
+	go run .
 
 clean:
-	rm -rf bin
-	# Leave server/static/ alone so `go build` keeps working;
-	# `make web` will overwrite it on the next build.
+	rm -rf bin web/dist
