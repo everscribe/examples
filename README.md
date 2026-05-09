@@ -12,15 +12,21 @@ removing users each emit `user.invite`, `user.role.change`, and
 `user.remove` audit events. The same page mounts `<EverscribeEvents />`
 to display those events live.
 
+The frontend is **embedded into the Go binary** via `//go:embed`, so
+`make build` produces a single self-contained executable that serves
+both the React app and the API on one port.
+
 ## Layout
 
 ```
 examples/
-├── server/          Go HTTP server (port 8080)
-│   ├── go.mod       replace → ../../sdk-go
-│   └── main.go
-└── web/             Vite + React + TS (port 5173)
-    ├── package.json @everscribe/events-react → file:../../events-react
+├── server/              Go HTTP server (port 8080)
+│   ├── go.mod           replace → ../../sdk-go
+│   ├── main.go          //go:embed all:static
+│   └── static/          ← Vite writes its build output here
+└── web/                 Vite + React + TS
+    ├── package.json     @everscribe/events-react → file:../../events-react
+    ├── vite.config.ts   build.outDir = ../server/static
     └── src/
 ```
 
@@ -37,29 +43,36 @@ alongside the demo.
 ## Setup
 
 ```sh
-# 1. Credentials
 cp .env.example .env
-# Edit .env and fill in EVERSCRIBE_PROJECT_ID and EVERSCRIBE_API_KEY.
-
-# 2. Install web deps
-cd web && npm install && cd ..
+# Fill in EVERSCRIBE_PROJECT_ID and EVERSCRIBE_API_KEY.
 ```
 
-## Run
-
-In two terminals:
+## Run (single binary)
 
 ```sh
-# Terminal 1: Go backend
+make build       # builds web/ into server/static, then compiles the Go binary
 set -a; source .env; set +a
-cd server && go run .
-
-# Terminal 2: React frontend
-cd web && npm run dev
+make run         # or: ./bin/server
 ```
 
-Open http://localhost:5173. The Vite dev server proxies `/api/*` to the
-Go server on `:8080`.
+Open <http://localhost:8080>. One process, one port.
+
+## Run (development, with HMR)
+
+If you want React hot-reload while iterating, run the two halves
+separately. Vite serves on `:5173` and proxies `/api/*` to the Go server
+on `:8080`.
+
+```sh
+# Terminal 1
+set -a; source .env; set +a
+make dev-server
+
+# Terminal 2
+make dev-web
+```
+
+Open <http://localhost:5173>.
 
 ## What to try
 
@@ -76,6 +89,8 @@ endpoint. The token is scoped to `tenant_id=tenant_demo` and
 
 ## Where things live
 
+- Static embed: [server/main.go](server/main.go) → `//go:embed all:static`
+  + `newStaticHandler`
 - Token mint: [server/main.go](server/main.go) → `embedToken` handler
 - Audit middleware (populates Actor/Origin per request):
   [server/main.go](server/main.go) → `event.NewMiddleware(...)`
