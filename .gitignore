@@ -2,6 +2,7 @@
 .env.local
 node_modules/
 dist/
+bin/
 server/server
-server/bin/
+server/static/
 .DS_Store
