@@ -4,12 +4,12 @@ A minimal end-to-end demo that exercises both Everscribe libraries:
 
 - **[sdk-go](../sdk-go)** — Go backend that records audit events
   (Recorder) and mints scoped embed tokens (Minter)
-- **[events-react](../events-react)** — `<EverscribeEvents />`
+- **[components](../components)** — `<AuditTrail />`
   React component that renders the audit trail in the browser
 
 The app is a tiny in-memory team manager. Inviting, role-changing, and
 removing users each emit `user.invite`, `user.role.change`, and
-`user.remove` audit events. The same page mounts `<EverscribeEvents />`
+`user.remove` audit events. The same page mounts `<AuditTrail />`
 to display those events live.
 
 The frontend is **embedded into the Go binary** via `//go:embed`, so
@@ -24,7 +24,7 @@ examples/
 ├── main.go        //go:embed all:web/dist
 ├── Makefile
 └── web/           Vite + React + TS
-    ├── package.json   @everscribe/events-react → file:../../events-react
+    ├── package.json   @everscribe/components-{react,core,styles} → file:../../components/packages/*
     ├── vite.config.ts
     ├── src/
     └── dist/      ← Vite output, embedded into the binary
@@ -77,7 +77,7 @@ Open <http://localhost:5173>.
    with a before/after diff (the Go handler calls `e.Diff(before, after)`).
 3. Remove a teammate — emits `user.remove`.
 
-The `<EverscribeEvents />` component polls the Everscribe API every 3
+The `<AuditTrail />` component polls the Everscribe API every 3
 seconds using a JWT minted by the Go server's `/api/embed-token`
 endpoint. The token is scoped to `tenant_id=tenant_demo` and
 `actions=["user.*"]` so it can only read this app's events.
@@ -93,4 +93,4 @@ endpoint. The token is scoped to `tenant_id=tenant_demo` and
   [main.go](main.go) → `inviteUser`, `changeRole`, `removeUser` use the
   `defer rec.Record(...)` idiom
 - Component mount: [web/src/App.tsx](web/src/App.tsx) →
-  `<EverscribeEvents tokenEndpoint="/api/embed-token" />`
+  `<AuditTrail tokenEndpoint="/api/embed-token" />`
