@@ -380,6 +380,9 @@ app.get('/api/embed-token/admin', async (_req, res) => {
     const token = await minter.mintToken({
       expiresIn: 60 * 60 * 1000,
       allowedActions: ['secret.*'],
+      // Admin token gets full AI + Query access.
+      allowDSLInput: true,
+      allowNLP: true,
     })
     res.json({ token })
   } catch (err) {
@@ -400,6 +403,12 @@ app.get('/api/embed-token/customer', async (req, res) => {
       tenantId: me.tenantId,
       expiresIn: 60 * 60 * 1000,
       allowedActions: ['secret.*'],
+      // Customer (tenant-scoped) tokens also get AI + Query —
+      // the partner has opted their end users into both. Server-
+      // side, tenantId is still enforced on every read, so the
+      // NLP-generated DSL is naturally tenant-scoped.
+      allowDSLInput: true,
+      allowNLP: true,
     })
     res.json({ token })
   } catch (err) {

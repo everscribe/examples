@@ -289,6 +289,10 @@ app.get('/api/embed-token', async (_req, res) => {
     const token = await minter.mintToken({
       expiresIn: 60 * 60 * 1000, // 1 hour
       allowedActions: ['secret.*'],
+      // Enable both the AI (natural-language) and Query (advanced
+      // DSL) tabs on the embedded events view.
+      allowDSLInput: true,
+      allowNLP: true,
     })
     res.json({ token })
   } catch (err) {

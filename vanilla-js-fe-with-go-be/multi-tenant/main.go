@@ -573,6 +573,9 @@ func embedTokenAdmin(m *minter.Client) http.HandlerFunc {
 		token, err := m.MintToken(r.Context(), minter.TokenOptions{
 			ExpiresIn:      time.Hour,
 			AllowedActions: []string{"secret.*"},
+			// Admin token gets full AI + Query access.
+			AllowDSLInput: true,
+			AllowNLP:      true,
 		})
 		if err != nil {
 			log.Printf("mint admin token: %v", err)
@@ -597,6 +600,12 @@ func embedTokenCustomer(m *minter.Client, users map[string]User) http.HandlerFun
 			TenantID:       me.TenantID,
 			ExpiresIn:      time.Hour,
 			AllowedActions: []string{"secret.*"},
+			// Customer (tenant-scoped) tokens also get AI + Query —
+			// the partner has opted their end users into both. Server-
+			// side, TenantID is still enforced on every read, so the
+			// NLP-generated DSL is naturally tenant-scoped.
+			AllowDSLInput: true,
+			AllowNLP:      true,
 		})
 		if err != nil {
 			log.Printf("mint customer token (tenant=%s): %v", me.TenantID, err)

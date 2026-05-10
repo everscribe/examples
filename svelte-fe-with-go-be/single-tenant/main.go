@@ -476,6 +476,10 @@ func embedToken(m *minter.Client) http.HandlerFunc {
 		token, err := m.MintToken(r.Context(), minter.TokenOptions{
 			ExpiresIn:      time.Hour,
 			AllowedActions: []string{"secret.*"},
+			// Enable both the AI (natural-language) and Query (advanced
+			// DSL) tabs on the embedded events view.
+			AllowDSLInput: true,
+			AllowNLP:      true,
 		})
 		if err != nil {
 			log.Printf("mint token: %v", err)
