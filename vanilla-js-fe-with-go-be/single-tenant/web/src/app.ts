@@ -11,7 +11,10 @@ type Dialog =
   | { kind: 'rotate'; secret: Secret }
   | { kind: 'share'; secret: Secret }
   | { kind: 'expire'; secret: Secret }
+  | { kind: 'create' }
   | null
+
+type RowAction = 'reveal' | 'rotate' | 'share' | 'expire' | 'revoke'
 
 interface State {
   users: User[]
@@ -155,9 +158,16 @@ function renderVault() {
     el('section', { className: 'panel labeled' },
       el('div', { className: 'label-corner' }, 'your code · vault UI'),
       el('div', { className: 'panel-body' },
-        el('h2', {}, 'Create a secret'),
-        buildCreateForm(),
-        el('h2', {}, `Vault (${state.secrets.length})`),
+        el('div', { className: 'vault-header' },
+          el('h2', {}, `Vault (${state.secrets.length})`),
+          el('button', {
+            className: 'new-secret-btn',
+            onclick: () => openDialog({ kind: 'create' }),
+          },
+            el('span', { className: 'plus', 'aria-hidden': 'true' }, '+'),
+            document.createTextNode('New secret'),
+          ),
+        ),
         buildSecretsTable(),
       ),
     ),
@@ -165,10 +175,18 @@ function renderVault() {
 }
 
 function buildCreateForm(): HTMLElement {
-  const nameEl = el('input', { name: 'name', placeholder: 'name (e.g. stripe_api_key)', required: true }) as HTMLInputElement
-  const valueEl = el('input', { name: 'value', placeholder: 'plaintext value', required: true }) as HTMLInputElement
+  const nameEl = el('input', {
+    name: 'name',
+    placeholder: 'name (e.g. stripe_api_key)',
+    required: true,
+    autofocus: true,
+  }) as HTMLInputElement
+  const valueEl = el('input', {
+    name: 'value',
+    placeholder: 'plaintext value',
+    required: true,
+  }) as HTMLInputElement
   return el('form', {
-    className: 'create-form',
     onsubmit: async (e: Event) => {
       e.preventDefault()
       const name = nameEl.value.trim()
@@ -176,17 +194,21 @@ function buildCreateForm(): HTMLElement {
       if (!name || !value) return
       try {
         await api.create({ name, value })
-        nameEl.value = ''
-        valueEl.value = ''
+        closeDialog()
         await refreshSecrets()
       } catch (err) {
         setError(String(err))
       }
     },
   },
+    el('h3', {}, 'New secret'),
+    hint('Records a ', code('secret.create'), ' event.'),
     nameEl,
     valueEl,
-    el('button', { type: 'submit' }, 'Add'),
+    el('div', { className: 'modal-buttons' },
+      el('button', { type: 'button', className: 'secondary', onclick: closeDialog }, 'Cancel'),
+      el('button', { type: 'submit' }, 'Add'),
+    ),
   )
 }
 
@@ -216,16 +238,7 @@ function buildSecretRow(s: Secret): HTMLElement {
   )
   const actionsTd = el('td', { className: 'actions' })
   if (!s.revoked) {
-    actionsTd.append(
-      el('button', { onclick: () => onReveal(s) }, 'Reveal'),
-      el('button', { onclick: () => openDialog({ kind: 'rotate', secret: s }) }, 'Rotate'),
-      el('button', { onclick: () => openDialog({ kind: 'share', secret: s }) }, 'Share'),
-      el('button', { onclick: () => openDialog({ kind: 'expire', secret: s }) }, 'Expire'),
-      el('button', {
-        className: 'danger',
-        onclick: () => openDialog({ kind: 'revoke', secret: s }),
-      }, 'Revoke'),
-    )
+    actionsTd.append(buildActionSelect(s))
   }
   return el('tr', { className: s.revoked ? 'revoked' : '' },
     nameTd,
@@ -233,6 +246,35 @@ function buildSecretRow(s: Secret): HTMLElement {
     el('td', {}, s.revoked ? el('em', {}, 'revoked') : el('span', {}, 'active')),
     actionsTd,
   )
+}
+
+function buildActionSelect(s: Secret): HTMLElement {
+  const placeholder = el('option', { value: '', disabled: true, selected: true }, 'Actions…')
+  const select = el('select', {
+    className: 'action-select',
+    onchange: (e: Event) => {
+      const sel = e.currentTarget as HTMLSelectElement
+      const action = sel.value as RowAction | ''
+      sel.value = ''
+      if (action) onRowAction(s, action)
+    },
+  },
+    placeholder,
+    el('option', { value: 'reveal' }, 'Reveal'),
+    el('option', { value: 'rotate' }, 'Rotate'),
+    el('option', { value: 'share' }, 'Share'),
+    el('option', { value: 'expire' }, 'Expire'),
+    el('option', { value: 'revoke' }, 'Revoke'),
+  )
+  return select
+}
+
+function onRowAction(s: Secret, action: RowAction) {
+  if (action === 'reveal') {
+    void onReveal(s)
+  } else {
+    openDialog({ kind: action, secret: s })
+  }
 }
 
 // -------------------------- embed section --------------------------
@@ -283,6 +325,9 @@ function renderDialog() {
 function buildDialogBody(d: NonNullable<Dialog>): HTMLElement[] {
   const me = state.users.find((u) => u.id === state.actorId)
   switch (d.kind) {
+    case 'create':
+      return [buildCreateForm()]
+
     case 'reveal':
       return [
         el('h3', {}, 'Revealed value'),

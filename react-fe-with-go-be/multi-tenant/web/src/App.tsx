@@ -17,7 +17,10 @@ type Dialog =
   | { kind: 'rotate'; secret: Secret }
   | { kind: 'share'; secret: Secret }
   | { kind: 'expire'; secret: Secret }
+  | { kind: 'create' }
   | null
+
+type RowAction = 'reveal' | 'rotate' | 'share' | 'expire' | 'revoke'
 
 export function App() {
   const [tenants, setTenants] = useState<Tenant[]>([])
@@ -92,10 +95,18 @@ export function App() {
     const value = String(form.get('value') ?? '')
     try {
       await api.create({ name, value })
-      ;(e.target as HTMLFormElement).reset()
+      setDialog(null)
       await refreshSecrets()
     } catch (err) {
       setError(String(err))
+    }
+  }
+
+  const onRowAction = (s: Secret, action: RowAction) => {
+    if (action === 'reveal') {
+      void onReveal(s)
+    } else {
+      setDialog({ kind: action, secret: s })
     }
   }
 
@@ -227,18 +238,16 @@ export function App() {
             </div>
 
             <div className="panel-body">
-              <h2>Create a secret</h2>
-              <form onSubmit={onCreate} className="create-form">
-                <input
-                  name="name"
-                  placeholder="name (e.g. stripe_api_key)"
-                  required
-                />
-                <input name="value" placeholder="plaintext value" required />
-                <button type="submit">Add</button>
-              </form>
-
-              <h2>Vault ({secrets.length})</h2>
+              <div className="vault-header">
+                <h2>Vault ({secrets.length})</h2>
+                <button
+                  className="new-secret-btn"
+                  onClick={() => setDialog({ kind: 'create' })}
+                >
+                  <span className="plus" aria-hidden="true">+</span>
+                  New secret
+                </button>
+              </div>
               <table className="secrets">
                 <thead>
                   <tr>
@@ -268,30 +277,24 @@ export function App() {
                       <td>{s.revoked ? <em>revoked</em> : <span>active</span>}</td>
                       <td className="actions">
                         {!s.revoked && (
-                          <>
-                            <button onClick={() => onReveal(s)}>Reveal</button>
-                            <button
-                              onClick={() => setDialog({ kind: 'rotate', secret: s })}
-                            >
-                              Rotate
-                            </button>
-                            <button
-                              onClick={() => setDialog({ kind: 'share', secret: s })}
-                            >
-                              Share
-                            </button>
-                            <button
-                              onClick={() => setDialog({ kind: 'expire', secret: s })}
-                            >
-                              Expire
-                            </button>
-                            <button
-                              className="danger"
-                              onClick={() => setDialog({ kind: 'revoke', secret: s })}
-                            >
-                              Revoke
-                            </button>
-                          </>
+                          <select
+                            className="action-select"
+                            value=""
+                            onChange={(e) => {
+                              const action = e.target.value as RowAction | ''
+                              e.target.value = ''
+                              if (action) onRowAction(s, action)
+                            }}
+                          >
+                            <option value="" disabled>
+                              Actions…
+                            </option>
+                            <option value="reveal">Reveal</option>
+                            <option value="rotate">Rotate</option>
+                            <option value="share">Share</option>
+                            <option value="expire">Expire</option>
+                            <option value="revoke">Revoke</option>
+                          </select>
                         )}
                       </td>
                     </tr>
@@ -353,6 +356,29 @@ export function App() {
       {dialog && (
         <div className="modal-backdrop" onClick={closeDialog}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
+            {dialog.kind === 'create' && (
+              <form onSubmit={onCreate}>
+                <h3>New secret</h3>
+                <p className="hint">
+                  Records a <code>secret.create</code> event scoped to
+                  <code> {myTenant?.name ?? 'this tenant'}</code>.
+                </p>
+                <input
+                  autoFocus
+                  name="name"
+                  placeholder="name (e.g. stripe_api_key)"
+                  required
+                />
+                <input name="value" placeholder="plaintext value" required />
+                <div className="modal-buttons">
+                  <button type="button" className="secondary" onClick={closeDialog}>
+                    Cancel
+                  </button>
+                  <button type="submit">Add</button>
+                </div>
+              </form>
+            )}
+
             {dialog.kind === 'reveal' && (
               <>
                 <h3>Revealed value</h3>

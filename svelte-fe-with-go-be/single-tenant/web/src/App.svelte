@@ -7,7 +7,10 @@
     | { kind: 'rotate'; secret: Secret }
     | { kind: 'share'; secret: Secret }
     | { kind: 'expire'; secret: Secret }
+    | { kind: 'create' }
     | null
+
+  type RowAction = 'reveal' | 'rotate' | 'share' | 'expire' | 'revoke'
 
   let users = $state<User[]>([])
   let secrets = $state<Secret[]>([])
@@ -67,10 +70,18 @@
     if (!name || !value) return
     try {
       await api.create({ name, value })
-      ;(e.currentTarget as HTMLFormElement).reset()
+      dialog = null
       await refreshSecrets()
     } catch (err) {
       error = String(err)
+    }
+  }
+
+  function onRowAction(s: Secret, action: RowAction) {
+    if (action === 'reveal') {
+      void onReveal(s)
+    } else {
+      dialog = { kind: action, secret: s }
     }
   }
 
@@ -149,13 +160,11 @@
   }
 
   // Share candidates: everyone but the actor and already-shared users.
-  let shareCandidates = $derived(
-    dialog?.kind === 'share'
-      ? users.filter(
-          (u) => u.id !== actorId && !dialog!.secret.shared_with.includes(u.id),
-        )
-      : [],
-  )
+  let shareCandidates = $derived.by(() => {
+    if (dialog?.kind !== 'share') return []
+    const shared = dialog.secret.shared_with
+    return users.filter((u) => u.id !== actorId && !shared.includes(u.id))
+  })
 </script>
 
 <div class="app">
@@ -184,14 +193,13 @@
   <section class="panel labeled">
     <div class="label-corner">your code · vault UI</div>
     <div class="panel-body">
-      <h2>Create a secret</h2>
-      <form class="create-form" onsubmit={onCreate}>
-        <input name="name" placeholder="name (e.g. stripe_api_key)" required />
-        <input name="value" placeholder="plaintext value" required />
-        <button type="submit">Add</button>
-      </form>
-
-      <h2>Vault ({secrets.length})</h2>
+      <div class="vault-header">
+        <h2>Vault ({secrets.length})</h2>
+        <button class="new-secret-btn" onclick={() => (dialog = { kind: 'create' })}>
+          <span class="plus" aria-hidden="true">+</span>
+          New secret
+        </button>
+      </div>
       <table class="secrets">
         <thead>
           <tr>
@@ -217,13 +225,23 @@
               <td>{#if s.revoked}<em>revoked</em>{:else}<span>active</span>{/if}</td>
               <td class="actions">
                 {#if !s.revoked}
-                  <button onclick={() => onReveal(s)}>Reveal</button>
-                  <button onclick={() => (dialog = { kind: 'rotate', secret: s })}>Rotate</button>
-                  <button onclick={() => (dialog = { kind: 'share', secret: s })}>Share</button>
-                  <button onclick={() => (dialog = { kind: 'expire', secret: s })}>Expire</button>
-                  <button class="danger" onclick={() => (dialog = { kind: 'revoke', secret: s })}>
-                    Revoke
-                  </button>
+                  <select
+                    class="action-select"
+                    value=""
+                    onchange={(e) => {
+                      const sel = e.currentTarget as HTMLSelectElement
+                      const action = sel.value as RowAction | ''
+                      sel.value = ''
+                      if (action) onRowAction(s, action)
+                    }}
+                  >
+                    <option value="" disabled selected>Actions…</option>
+                    <option value="reveal">Reveal</option>
+                    <option value="rotate">Rotate</option>
+                    <option value="share">Share</option>
+                    <option value="expire">Expire</option>
+                    <option value="revoke">Revoke</option>
+                  </select>
                 {/if}
               </td>
             </tr>
@@ -253,7 +271,23 @@
     <!-- svelte-ignore a11y_click_events_have_key_events -->
     <!-- svelte-ignore a11y_no_static_element_interactions -->
     <div class="modal" onclick={(e) => e.stopPropagation()}>
-      {#if dialog.kind === 'reveal'}
+      {#if dialog.kind === 'create'}
+        <form onsubmit={onCreate}>
+          <h3>New secret</h3>
+          <p class="hint">Records a <code>secret.create</code> event.</p>
+          <input
+            use:autofocus
+            name="name"
+            placeholder="name (e.g. stripe_api_key)"
+            required
+          />
+          <input name="value" placeholder="plaintext value" required />
+          <div class="modal-buttons">
+            <button type="button" class="secondary" onclick={closeDialog}>Cancel</button>
+            <button type="submit">Add</button>
+          </div>
+        </form>
+      {:else if dialog.kind === 'reveal'}
         <h3>Revealed value</h3>
         <p class="hint">
           Recorded as <code>secret.reveal</code>{me ? ` by ${me.name}` : ''}.

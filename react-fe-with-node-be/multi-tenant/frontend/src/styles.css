@@ -94,12 +94,28 @@ button.danger { background: #fff; color: #b00020; border-color: #e7c5cb; }
   font-size: 16px;
 }
 
-.panel-body h2 + .create-form { margin-bottom: 28px; }
+.vault-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
 
-.create-form {
-  display: grid;
-  grid-template-columns: 1fr 2fr auto;
-  gap: 8px;
+.vault-header h2 { margin: 0; }
+
+.new-secret-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  font-size: 13px;
+}
+
+.new-secret-btn .plus {
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1;
 }
 
 table.secrets { width: 100%; border-collapse: collapse; }
@@ -119,11 +135,12 @@ table.secrets th {
   letter-spacing: 0.04em;
 }
 
-.secrets td.actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.secrets td.actions { white-space: nowrap; }
 
-.secrets td.actions button {
+.secrets td.actions .action-select {
   padding: 4px 8px;
   font-size: 12px;
+  cursor: pointer;
 }
 
 .secrets tr.revoked { opacity: 0.5; }
