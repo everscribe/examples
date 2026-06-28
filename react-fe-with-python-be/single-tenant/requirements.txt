@@ -1,0 +1,7 @@
+# The Everscribe Python SDK, installed editable from the sibling repo (the
+# analog of the Node example's "file:../../../sdk-node"). fastapi bundles
+# Starlette, which the SDK's ASGI adapter needs.
+-e ../../../sdk-python
+fastapi>=0.110
+uvicorn>=0.27
+python-dotenv>=1.0
