@@ -1,8 +1,8 @@
 # Everscribe examples
 
 End-to-end demos of [Everscribe](https://everscribe.io) — the embeddable
-audit-log platform — across six frontend × backend stack combinations,
-each in single-tenant and multi-tenant variants. **Twelve runnable
+audit-log platform — across nine frontend × backend stack combinations,
+each in single-tenant and multi-tenant variants. **Eighteen runnable
 examples**, all built around the same domain so you can compare
 integration shapes without learning a new app each time.
 
@@ -66,6 +66,19 @@ Node variants run the Express server under `tsx`, with
 `express.static('frontend/dist')` serving the built frontend on the
 same port as the API. `npm run build && npm start`.
 
+### Python backend (`everscribe`)
+
+| Frontend       | Single-tenant                                                                    | Multi-tenant                                                                  |
+|----------------|----------------------------------------------------------------------------------|-------------------------------------------------------------------------------|
+| React          | [react-fe-with-python-be/single-tenant](react-fe-with-python-be/single-tenant)   | [react-fe-with-python-be/multi-tenant](react-fe-with-python-be/multi-tenant)   |
+| Svelte         | [svelte-fe-with-python-be/single-tenant](svelte-fe-with-python-be/single-tenant) | [svelte-fe-with-python-be/multi-tenant](svelte-fe-with-python-be/multi-tenant) |
+| Vanilla JS     | [vanilla-js-fe-with-python-be/single-tenant](vanilla-js-fe-with-python-be/single-tenant) | [vanilla-js-fe-with-python-be/multi-tenant](vanilla-js-fe-with-python-be/multi-tenant) |
+
+Python variants run FastAPI under uvicorn, serving the built frontend
+from `frontend/dist` on the same port as the API. Set up a venv, then
+`python backend/app.py`. The audit wiring uses the SDK's ASGI middleware
+(`EverscribeMiddleware`) and `current_event()`.
+
 ---
 
 ## What every example does
@@ -128,7 +141,7 @@ trail.
                   ┌─────────────┴─────────────┐
                   │                           │
     ┌─────────────▼─────────────┐ ┌───────────▼─────────────┐
-    │ Recorder (sdk-go/sdk-node)│ │ Embed reads via JWT      │
+    │ Recorder (go/node/python) │ │ Embed reads via JWT      │
     │                           │ │                          │
     │ POST /v1/events  (batched)│ │ GET /v1/embed/events?... │
     └─────────────▲─────────────┘ └───────────▲─────────────┘
@@ -169,13 +182,16 @@ github.com/everscribe/
 ├── components/        ← packages/{react,element,core,styles}
 ├── examples/          ← you are here
 ├── sdk-go/
-└── sdk-node/
+├── sdk-node/
+└── sdk-python/
 ```
 
 The `*-with-go-be/` examples have `replace github.com/everscribe/sdk-go
 => ../../../sdk-go` in their `go.mod`. The `*-with-node-be/` examples
-use `"@everscribe/sdk-node": "file:../../../sdk-node"`. Same shape for
-the components packages.
+use `"@everscribe/sdk-node": "file:../../../sdk-node"`. The
+`*-with-python-be/` examples install the SDK editable via
+`-e ../../../sdk-python` in `requirements.txt`. Same shape for the
+components packages.
 
 If you fork or move this repo, update the relative paths or swap to
 published versions.
@@ -188,6 +204,7 @@ published versions.
 |-----------------|----------|
 | `*-with-go-be/` | Go 1.25+, Node 18+, an Everscribe project |
 | `*-with-node-be/` | Node 20+, an Everscribe project |
+| `*-with-python-be/` | Python 3.10+, Node 20+, an Everscribe project |
 
 All examples need an Everscribe project ID (`proj_*`) and API key
 (`evs_*`) — set them in `.env` per each example's instructions.
@@ -203,6 +220,9 @@ Not sure where to begin?
   is closest to a real product.
 - **You're a Node shop building B2B SaaS** →
   [react-fe-with-node-be/multi-tenant](react-fe-with-node-be/multi-tenant).
+- **You're a Python shop building B2B SaaS** →
+  [react-fe-with-python-be/multi-tenant](react-fe-with-python-be/multi-tenant)
+  (FastAPI + the SDK's ASGI middleware).
 - **You want the simplest possible end-to-end** →
   [vanilla-js-fe-with-go-be/single-tenant](vanilla-js-fe-with-go-be/single-tenant).
   Smallest bundle (~12 KB gzip), no framework, single-binary deploy.
@@ -235,4 +255,5 @@ Not sure where to begin?
 
 - Go SDK: [github.com/everscribe/sdk-go](https://github.com/everscribe/sdk-go)
 - Node SDK: [github.com/everscribe/sdk-node](https://github.com/everscribe/sdk-node)
+- Python SDK: [github.com/everscribe/sdk-python](https://github.com/everscribe/sdk-python)
 - Embeddable components: [github.com/everscribe/components](https://github.com/everscribe/components)
