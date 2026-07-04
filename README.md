@@ -1,8 +1,8 @@
 # Everscribe examples
 
 End-to-end demos of [Everscribe](https://everscribe.io) — the embeddable
-audit-log platform — across nine frontend × backend stack combinations,
-each in single-tenant and multi-tenant variants. **Eighteen runnable
+audit-log platform — across twelve frontend × backend stack combinations,
+each in single-tenant and multi-tenant variants. **Twenty-four runnable
 examples**, all built around the same domain so you can compare
 integration shapes without learning a new app each time.
 
@@ -79,6 +79,19 @@ from `frontend/dist` on the same port as the API. Set up a venv, then
 `python backend/app.py`. The audit wiring uses the SDK's ASGI middleware
 (`EverscribeMiddleware`) and `current_event()`.
 
+### Rust backend (`everscribe`)
+
+| Frontend       | Single-tenant                                                                | Multi-tenant                                                              |
+|----------------|------------------------------------------------------------------------------|---------------------------------------------------------------------------|
+| React          | [react-fe-with-rust-be/single-tenant](react-fe-with-rust-be/single-tenant)   | [react-fe-with-rust-be/multi-tenant](react-fe-with-rust-be/multi-tenant)   |
+| Svelte         | [svelte-fe-with-rust-be/single-tenant](svelte-fe-with-rust-be/single-tenant) | [svelte-fe-with-rust-be/multi-tenant](svelte-fe-with-rust-be/multi-tenant) |
+| Vanilla JS     | [vanilla-js-fe-with-rust-be/single-tenant](vanilla-js-fe-with-rust-be/single-tenant) | [vanilla-js-fe-with-rust-be/multi-tenant](vanilla-js-fe-with-rust-be/multi-tenant) |
+
+Rust variants run an axum server, serving the built frontend from
+`frontend/dist` (via `tower-http`'s `ServeDir`) on the same port as the API.
+`cargo run`. The audit wiring uses the SDK's tower middleware
+(`EverscribeLayer`) and the `CurrentEvent` extractor.
+
 ---
 
 ## What every example does
@@ -141,7 +154,7 @@ trail.
                   ┌─────────────┴─────────────┐
                   │                           │
     ┌─────────────▼─────────────┐ ┌───────────▼─────────────┐
-    │ Recorder (go/node/python) │ │ Embed reads via JWT      │
+    │ Recorder (go/node/py/rust)│ │ Embed reads via JWT      │
     │                           │ │                          │
     │ POST /v1/events  (batched)│ │ GET /v1/embed/events?... │
     └─────────────▲─────────────┘ └───────────▲─────────────┘
@@ -183,15 +196,17 @@ github.com/everscribe/
 ├── examples/          ← you are here
 ├── sdk-go/
 ├── sdk-node/
-└── sdk-python/
+├── sdk-python/
+└── sdk-rust/
 ```
 
 The `*-with-go-be/` examples have `replace github.com/everscribe/sdk-go
 => ../../../sdk-go` in their `go.mod`. The `*-with-node-be/` examples
 use `"@everscribe/sdk-node": "file:../../../sdk-node"`. The
 `*-with-python-be/` examples install the SDK editable via
-`-e ../../../sdk-python` in `requirements.txt`. Same shape for the
-components packages.
+`-e ../../../sdk-python` in `requirements.txt`. The `*-with-rust-be/`
+examples use a path dependency `everscribe = { path = "../../../sdk-rust" }`
+in `Cargo.toml`. Same shape for the components packages.
 
 If you fork or move this repo, update the relative paths or swap to
 published versions.
@@ -205,6 +220,7 @@ published versions.
 | `*-with-go-be/` | Go 1.25+, Node 18+, an Everscribe project |
 | `*-with-node-be/` | Node 20+, an Everscribe project |
 | `*-with-python-be/` | Python 3.10+, Node 20+, an Everscribe project |
+| `*-with-rust-be/` | Rust 1.85+, Node 20+, an Everscribe project |
 
 All examples need an Everscribe project ID (`proj_*`) and API key
 (`evs_*`) — set them in `.env` per each example's instructions.
@@ -223,6 +239,9 @@ Not sure where to begin?
 - **You're a Python shop building B2B SaaS** →
   [react-fe-with-python-be/multi-tenant](react-fe-with-python-be/multi-tenant)
   (FastAPI + the SDK's ASGI middleware).
+- **You're a Rust shop building B2B SaaS** →
+  [react-fe-with-rust-be/multi-tenant](react-fe-with-rust-be/multi-tenant)
+  (axum + the SDK's tower middleware).
 - **You want the simplest possible end-to-end** →
   [vanilla-js-fe-with-go-be/single-tenant](vanilla-js-fe-with-go-be/single-tenant).
   Smallest bundle (~12 KB gzip), no framework, single-binary deploy.
@@ -256,4 +275,5 @@ Not sure where to begin?
 - Go SDK: [github.com/everscribe/sdk-go](https://github.com/everscribe/sdk-go)
 - Node SDK: [github.com/everscribe/sdk-node](https://github.com/everscribe/sdk-node)
 - Python SDK: [github.com/everscribe/sdk-python](https://github.com/everscribe/sdk-python)
+- Rust SDK: [github.com/everscribe/sdk-rust](https://github.com/everscribe/sdk-rust)
 - Embeddable components: [github.com/everscribe/components](https://github.com/everscribe/components)
