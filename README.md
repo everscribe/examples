@@ -37,7 +37,7 @@ trail.
 Pick by frontend and backend; each combo has a single-tenant and a
 multi-tenant variant.
 
-### Go backend (`@everscribe/sdk-go`)
+### Go backend
 
 | Frontend       | Single-tenant                                                     | Multi-tenant                                                    |
 |----------------|-------------------------------------------------------------------|-----------------------------------------------------------------|
@@ -45,7 +45,7 @@ multi-tenant variant.
 | Svelte         | [svelte-fe-with-go-be/single-tenant](svelte-fe-with-go-be/single-tenant) | [svelte-fe-with-go-be/multi-tenant](svelte-fe-with-go-be/multi-tenant) |
 | Vanilla JS     | [vanilla-js-fe-with-go-be/single-tenant](vanilla-js-fe-with-go-be/single-tenant) | [vanilla-js-fe-with-go-be/multi-tenant](vanilla-js-fe-with-go-be/multi-tenant) |
 
-### Node backend (`@everscribe/sdk-node`)
+### Node backend
 
 | Frontend       | Single-tenant                                                         | Multi-tenant                                                        |
 |----------------|-----------------------------------------------------------------------|---------------------------------------------------------------------|
@@ -53,7 +53,7 @@ multi-tenant variant.
 | Svelte         | [svelte-fe-with-node-be/single-tenant](svelte-fe-with-node-be/single-tenant) | [svelte-fe-with-node-be/multi-tenant](svelte-fe-with-node-be/multi-tenant) |
 | Vanilla JS     | [vanilla-js-fe-with-node-be/single-tenant](vanilla-js-fe-with-node-be/single-tenant) | [vanilla-js-fe-with-node-be/multi-tenant](vanilla-js-fe-with-node-be/multi-tenant) |
 
-### Python backend (`everscribe`)
+### Python backend
 
 | Frontend       | Single-tenant                                                                    | Multi-tenant                                                                  |
 |----------------|----------------------------------------------------------------------------------|-------------------------------------------------------------------------------|
@@ -61,7 +61,7 @@ multi-tenant variant.
 | Svelte         | [svelte-fe-with-python-be/single-tenant](svelte-fe-with-python-be/single-tenant) | [svelte-fe-with-python-be/multi-tenant](svelte-fe-with-python-be/multi-tenant) |
 | Vanilla JS     | [vanilla-js-fe-with-python-be/single-tenant](vanilla-js-fe-with-python-be/single-tenant) | [vanilla-js-fe-with-python-be/multi-tenant](vanilla-js-fe-with-python-be/multi-tenant) |
 
-### Rust backend (`everscribe`)
+### Rust backend
 
 | Frontend       | Single-tenant                                                                | Multi-tenant                                                              |
 |----------------|------------------------------------------------------------------------------|---------------------------------------------------------------------------|
