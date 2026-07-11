@@ -1,4 +1,4 @@
-# Everscribe examples
+# Full-Stack Runnable Everscribe Examples
 
 End-to-end demos of [Everscribe](https://everscribe.io) across twelve frontend × backend stack combinations,
 each in single-tenant and multi-tenant variants. **Twenty-four runnable
