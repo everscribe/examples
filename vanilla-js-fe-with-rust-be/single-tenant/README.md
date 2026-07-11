@@ -1,18 +1,10 @@
 # Vanilla JS frontend + Rust backend · single-tenant
 
-Same secrets-vault demo as the other single-tenant variants. Frontend = plain
-TS + DOM manipulation + the `<audit-trail>` custom element; backend = Rust +
-axum + the Everscribe Rust SDK. Smallest bundle of the three frontends
-(~12 KB gzip).
-
-The full security framing lives in the [repo root README](../../README.md).
-This file is just how to run.
-
 ## Prerequisites
 
 - Rust 1.85+
 - Node 20+ (to build the frontend)
-- An Everscribe project with a `proj_*` ID and an `evs_*` API key
+- An Everscribe project with a `proj_*` ID and an `evs_*` API key ([create an account](https://everscribe.io/signup))
 
 ## Setup
 

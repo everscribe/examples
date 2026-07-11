@@ -1,17 +1,10 @@
 # React frontend + Go backend · single-tenant
 
-Secrets-vault demo. One app view. Every vault action emits an audit
-event; `<AuditTrail />` from `@everscribe/components-react` renders the
-trail underneath.
-
-The full security framing lives in the [repo root README](../../README.md).
-This file is just how to run.
-
 ## Prerequisites
 
 - Go 1.25+
 - Node 18+
-- An Everscribe project with a `proj_*` ID and an `evs_*` API key
+- An Everscribe project with a `proj_*` ID and an `evs_*` API key ([create an account](https://everscribe.io/signup))
 
 ## Setup
 

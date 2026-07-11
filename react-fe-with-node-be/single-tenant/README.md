@@ -1,17 +1,9 @@
 # React frontend + Node backend · single-tenant
 
-Same secrets-vault demo as the React+Go variant - same UI, same actor
-flow, same audit verbs - but the backend is Node + Express + sdk-node.
-The frontend is byte-identical (`frontend/` is a fork of the Go variant's
-`web/`).
-
-The full security framing lives in the [repo root README](../../README.md).
-This file is just how to run.
-
 ## Prerequisites
 
 - Node 20+
-- An Everscribe project with a `proj_*` ID and an `evs_*` API key
+- An Everscribe project with a `proj_*` ID and an `evs_*` API key ([create an account](https://everscribe.io/signup))
 
 ## Setup
 

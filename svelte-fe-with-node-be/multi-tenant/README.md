@@ -1,17 +1,17 @@
 # Svelte frontend + Node backend · multi-tenant
 
-Same multi-tenant secrets-vault demo as the other multi variants. Two
-seeded tenants, Customer view scoped via `tenantId`, Admin view
-cross-tenant. Frontend = Svelte 5 + `<audit-trail>` custom element;
-backend = Node + Express + `@everscribe/sdk-node`.
+Secrets-vault demo with two seeded tenants. The UI has two tabs:
 
-The full security framing lives in the [repo root README](../../README.md).
-This file is just how to run.
+- **Customer view** - what your customer's user sees inside their workspace.
+  `<AuditTrail />` is scoped to the actor's tenant via `tenant_id` on the minted
+  embed token.
+- **Admin view** - your business's internal console. `<AuditTrail />` is minted
+  with no `tenant_id`, so it sees events across every tenant in the project.
 
 ## Prerequisites
 
 - Node 20+
-- An Everscribe project with a `proj_*` ID and an `evs_*` API key
+- An Everscribe project with a `proj_*` ID and an `evs_*` API key ([create an account](https://everscribe.io/signup))
 
 ## Setup
 

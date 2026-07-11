@@ -1,17 +1,9 @@
 # Svelte frontend + Node backend · single-tenant
 
-Same secrets-vault demo as the other single-tenant variants. The audit
-embed is the `<audit-trail>` custom element from
-`@everscribe/components-element`. The backend is Node + Express +
-`@everscribe/sdk-node`.
-
-The full security framing lives in the [repo root README](../../README.md).
-This file is just how to run.
-
 ## Prerequisites
 
 - Node 20+
-- An Everscribe project with a `proj_*` ID and an `evs_*` API key
+- An Everscribe project with a `proj_*` ID and an `evs_*` API key ([create an account](https://everscribe.io/signup))
 
 ## Setup
 

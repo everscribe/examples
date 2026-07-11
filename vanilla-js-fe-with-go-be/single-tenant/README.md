@@ -1,19 +1,10 @@
 # Vanilla JS frontend + Go backend · single-tenant
 
-Same secrets-vault demo as the React variant, but the frontend is plain
-TypeScript + DOM manipulation. The audit-log embed is the
-`<audit-trail>` custom element from
-`@everscribe/components-element` - auto-registered on import,
-framework-agnostic, drops in anywhere a custom element works.
-
-The full security framing lives in the [repo root README](../../README.md).
-This file is just how to run.
-
 ## Prerequisites
 
 - Go 1.25+
 - Node 18+ (for Vite - the bundler)
-- An Everscribe project with a `proj_*` ID and an `evs_*` API key
+- An Everscribe project with a `proj_*` ID and an `evs_*` API key ([create an account](https://everscribe.io/signup))
 
 ## Setup
 

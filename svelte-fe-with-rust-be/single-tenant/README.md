@@ -1,17 +1,10 @@
 # Svelte frontend + Rust backend · single-tenant
 
-Same secrets-vault demo as the other single-tenant variants. The audit embed is
-the `<audit-trail>` custom element from `@everscribe/components-element`. The
-backend is Rust + axum + the Everscribe Rust SDK.
-
-The full security framing lives in the [repo root README](../../README.md).
-This file is just how to run.
-
 ## Prerequisites
 
 - Rust 1.85+
 - Node 20+ (to build the frontend)
-- An Everscribe project with a `proj_*` ID and an `evs_*` API key
+- An Everscribe project with a `proj_*` ID and an `evs_*` API key ([create an account](https://everscribe.io/signup))
 
 ## Setup
 

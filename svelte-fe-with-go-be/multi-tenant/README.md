@@ -1,23 +1,18 @@
 # Svelte frontend + Go backend · multi-tenant
 
-Same multi-tenant secrets-vault demo as the React and Vanilla JS multi
-variants. The frontend is Svelte 5 with runes; the audit embeds are two
-`<audit-trail>` custom elements from `@everscribe/components-element`,
-each minted with a different scope:
+Secrets-vault demo with two seeded tenants. The UI has two tabs:
 
-- **Customer view** - token scoped to the actor's tenant. Embed only
-  shows that tenant's events.
-- **Admin view** - token has no `tenant_id`. Embed shows events across
-  every tenant.
-
-The full security framing lives in the [repo root README](../../README.md).
-This file is just how to run.
+- **Customer view** - what your customer's user sees inside their workspace.
+  `<AuditTrail />` is scoped to the actor's tenant via `tenant_id` on the minted
+  embed token.
+- **Admin view** - your business's internal console. `<AuditTrail />` is minted
+  with no `tenant_id`, so it sees events across every tenant in the project.
 
 ## Prerequisites
 
 - Go 1.25+
 - Node 18+
-- An Everscribe project with a `proj_*` ID and an `evs_*` API key
+- An Everscribe project with a `proj_*` ID and an `evs_*` API key ([create an account](https://everscribe.io/signup))
 
 ## Setup
 

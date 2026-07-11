@@ -8,14 +8,11 @@ Secrets-vault demo with two seeded tenants. The UI has two tabs:
 - **Admin view** - your business's internal console. `<AuditTrail />` is minted
   with no `tenant_id`, so it sees events across every tenant in the project.
 
-The full security framing lives in the [repo root README](../../README.md).
-This file is just how to run.
-
 ## Prerequisites
 
 - Go 1.25+
 - Node 18+
-- An Everscribe project with a `proj_*` ID and an `evs_*` API key
+- An Everscribe project with a `proj_*` ID and an `evs_*` API key ([create an account](https://everscribe.io/signup))
 
 ## Setup
 
