@@ -1,7 +1,7 @@
 # React frontend + Python backend · single-tenant
 
-Same secrets-vault demo as the React+Node and React+Go variants — same UI,
-same actor flow, same audit verbs — but the backend is Python + FastAPI +
+Same secrets-vault demo as the React+Node and React+Go variants - same UI,
+same actor flow, same audit verbs - but the backend is Python + FastAPI +
 the Everscribe Python SDK. The frontend is byte-identical to the Node
 variant's `frontend/`.
 
@@ -67,7 +67,7 @@ The frontend is unchanged. On the backend:
 | Run                | `tsx backend/index.ts`                                             | `python backend/app.py` (uvicorn)                                         |
 
 Both backends use the SDK's framework adapter and its auto-record-on-finish
-behavior, so the handler code reads almost identically — set the action on
+behavior, so the handler code reads almost identically - set the action on
 the request-scoped event and return your response.
 
 ### Field names
@@ -76,7 +76,7 @@ Unlike the Node SDK (camelCase in TS, snake_case on the wire), the Python
 SDK uses **snake_case** everywhere (`event.action`, `event.tenant_id`,
 `event.actor.display_name`), which already matches the wire format. The
 `to_wire()` helper here only exists to drop the secret `value` before
-returning secrets to the client — not for case conversion.
+returning secrets to the client - not for case conversion.
 
 ## Demo cast
 

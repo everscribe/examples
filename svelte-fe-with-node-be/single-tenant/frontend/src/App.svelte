@@ -21,7 +21,7 @@
 
   let me = $derived(users.find((u) => u.id === actorId))
 
-  // Reset dialog input when the dialog kind changes — expire defaults
+  // Reset dialog input when the dialog kind changes - expire defaults
   // to 60, others start blank.
   $effect(() => {
     dialogInput = dialog?.kind === 'expire' ? '60' : ''
@@ -56,7 +56,7 @@
     actorId = id
   }
 
-  // Svelte action to autofocus an input on mount — works for elements
+  // Svelte action to autofocus an input on mount - works for elements
   // inserted dynamically (e.g., when the dialog opens).
   function autofocus(node: HTMLElement) {
     node.focus()

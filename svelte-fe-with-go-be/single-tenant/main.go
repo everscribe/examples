@@ -1,8 +1,8 @@
 // Demo backend for the Everscribe secrets-vault example
 // (single-tenant, React frontend, Go backend).
 //
-// In-memory vault with seven verbs — list, reveal, create, revoke,
-// rotate, share, expire — each emitting an audit event via sdk-go's
+// In-memory vault with seven verbs - list, reveal, create, revoke,
+// rotate, share, expire - each emitting an audit event via sdk-go's
 // Recorder. The frontend mounts <AuditTrail /> using a token minted
 // here.
 package main
@@ -32,7 +32,7 @@ import (
 //go:embed all:web/dist
 var staticFS embed.FS
 
-// Config — see .env.example. The 'required' tag surfaces missing
+// Config - see .env.example. The 'required' tag surfaces missing
 // credentials clearly at startup.
 type Config struct {
 	ProjectID string `env:"EVERSCRIBE_PROJECT_ID,required"`
@@ -42,7 +42,7 @@ type Config struct {
 
 // User is one entry in the seeded cast that the frontend's login dropdown
 // shows. The frontend sends X-Demo-Actor on every request to identify
-// who is "logged in" — see actorResolver below.
+// who is "logged in" - see actorResolver below.
 type User struct {
 	ID    string `json:"id"`
 	Name  string `json:"name"`
@@ -55,7 +55,7 @@ type User struct {
 type Secret struct {
 	ID         string     `json:"id"`
 	Name       string     `json:"name"`
-	value      string     // unexported — never marshaled
+	value      string     // unexported - never marshaled
 	CreatedBy  string     `json:"created_by"`
 	CreatedAt  time.Time  `json:"created_at"`
 	RotatedAt  *time.Time `json:"rotated_at,omitempty"`
@@ -113,7 +113,7 @@ func (v *vault) get(id string) (*Secret, bool) {
 	return s, ok
 }
 
-// snapshot returns a redacted copy suitable for use in event diffs —
+// snapshot returns a redacted copy suitable for use in event diffs -
 // the value field is replaced with "[REDACTED]" so plaintext never
 // leaves the process via the audit log.
 type secretSnapshot struct {

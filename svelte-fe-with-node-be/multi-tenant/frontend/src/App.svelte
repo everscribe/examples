@@ -21,8 +21,8 @@
 
   type RowAction = 'reveal' | 'rotate' | 'share' | 'expire' | 'revoke'
 
-  // The web component exposes onTokenExpired as a JS-only property — no
-  // attribute equivalent — so we set it via bind:this + $effect.
+  // The web component exposes onTokenExpired as a JS-only property - no
+  // attribute equivalent - so we set it via bind:this + $effect.
   interface AuditTrailEl extends HTMLElement {
     onTokenExpired?: () => Promise<string>
   }
@@ -198,7 +198,7 @@
     })
   }
 
-  // Same-tenant sharing only — actor's tenant, exclude self and
+  // Same-tenant sharing only - actor's tenant, exclude self and
   // already-shared users.
   let shareCandidates = $derived.by(() => {
     if (dialog?.kind !== 'share' || !me) return []
@@ -255,7 +255,7 @@
 
   {#if tab === 'customer'}
     <section class="panel labeled">
-      <div class="label-corner">your code · vault UI ({myTenant?.name ?? '—'})</div>
+      <div class="label-corner">your code · vault UI ({myTenant?.name ?? '-'})</div>
       <div class="panel-body">
         <div class="vault-header">
           <h2>Vault ({secrets.length})</h2>
@@ -319,7 +319,7 @@
       <div class="label-corner">Embedded Everscribe Component</div>
       <div class="panel-body">
         <p class="scope-hint">
-          Token scoped to <code>tenant_id={myTenant?.id ?? '—'}</code> — only
+          Token scoped to <code>tenant_id={myTenant?.id ?? '-'}</code> - only
           this tenant's events are visible.
         </p>
         {#key actorId}
@@ -332,7 +332,7 @@
       <div class="label-corner">Embedded Everscribe Component</div>
       <div class="panel-body">
         <p class="scope-hint">
-          Token has no <code>tenant_id</code> — events from every tenant in the
+          Token has no <code>tenant_id</code> - events from every tenant in the
           project are visible. This is your business's internal console.
         </p>
         <audit-trail

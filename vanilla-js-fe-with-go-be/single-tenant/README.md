@@ -3,7 +3,7 @@
 Same secrets-vault demo as the React variant, but the frontend is plain
 TypeScript + DOM manipulation. The audit-log embed is the
 `<audit-trail>` custom element from
-`@everscribe/components-element` — auto-registered on import,
+`@everscribe/components-element` - auto-registered on import,
 framework-agnostic, drops in anywhere a custom element works.
 
 The full security framing lives in the [repo root README](../../README.md).
@@ -12,7 +12,7 @@ This file is just how to run.
 ## Prerequisites
 
 - Go 1.25+
-- Node 18+ (for Vite — the bundler)
+- Node 18+ (for Vite - the bundler)
 - An Everscribe project with a `proj_*` ID and an `evs_*` API key
 
 ## Setup
@@ -42,7 +42,7 @@ Open <http://localhost:5173>.
 
 ## What's different from the React variant?
 
-The Go backend is identical — same handlers, same recorder/minter wiring,
+The Go backend is identical - same handlers, same recorder/minter wiring,
 same fake-login via `X-Demo-Actor`. The frontend is the only thing that
 changes:
 
@@ -54,7 +54,7 @@ changes:
 | Markup                 | JSX                                     | Tiny `el(tag, attrs, ...children)` helper              |
 | Bundle size (gzipped)  | ~52 KB                                  | ~12 KB                                                 |
 
-The audit component is **framework-agnostic** — Svelte, Solid, plain
+The audit component is **framework-agnostic** - Svelte, Solid, plain
 HTML, anywhere a custom element works. See `<audit-trail>` mounted in
 [web/src/app.ts](web/src/app.ts).
 

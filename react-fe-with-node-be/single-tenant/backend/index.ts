@@ -1,8 +1,8 @@
 // Demo backend for the Everscribe secrets-vault example
 // (single-tenant, React frontend, Node backend).
 //
-// In-memory vault with seven verbs — list, reveal, create, revoke,
-// rotate, share, expire — each emitting an audit event via sdk-node's
+// In-memory vault with seven verbs - list, reveal, create, revoke,
+// rotate, share, expire - each emitting an audit event via sdk-node's
 // Recorder. The frontend mounts <AuditTrail /> using a token minted
 // here.
 import 'dotenv/config'
@@ -25,7 +25,7 @@ interface User {
   role: 'admin' | 'member'
 }
 
-// Internal shape — `value` is never marshaled to clients.
+// Internal shape - `value` is never marshaled to clients.
 interface InternalSecret {
   id: string
   name: string
@@ -88,7 +88,7 @@ createSecret('stripe_api_key', 'sk_live_demo_seed_value', 'u_ada')
 createSecret('github_pat', 'ghp_demo_seed_value', 'u_ada')
 createSecret('datadog_api_key', 'dd_demo_seed_value', 'u_alan')
 
-// Snapshot for diffs — value always [REDACTED] so plaintext never
+// Snapshot for diffs - value always [REDACTED] so plaintext never
 // leaves the process via the audit log.
 function snapshot(s: InternalSecret) {
   return {

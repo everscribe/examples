@@ -6,8 +6,8 @@
 // and (b) which TenantID lands on the recorded audit events. Two embed-
 // token endpoints scope <AuditTrail /> two ways:
 //
-//   - /api/embed-token/admin    — no tenantId, cross-tenant view
-//   - /api/embed-token/customer — tenantId = actor's tenant, scoped view
+//   - /api/embed-token/admin    - no tenantId, cross-tenant view
+//   - /api/embed-token/customer - tenantId = actor's tenant, scoped view
 import 'dotenv/config'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -113,7 +113,7 @@ function listForTenant(tenantId: string): InternalSecret[] {
   return ids.map((id) => vault.get(id)!).sort((a, b) => a.id.localeCompare(b.id))
 }
 
-// Snapshot for diffs — value always [REDACTED] so plaintext never
+// Snapshot for diffs - value always [REDACTED] so plaintext never
 // leaves the process via the audit log.
 function snapshot(s: InternalSecret) {
   return {
@@ -374,7 +374,7 @@ app.post('/api/secrets/:id/expire', (req, res) => {
   res.status(204).send()
 })
 
-// Admin embed: token has no tenantId — cross-tenant view of all events.
+// Admin embed: token has no tenantId - cross-tenant view of all events.
 app.get('/api/embed-token/admin', async (_req, res) => {
   try {
     const token = await minter.mintToken({
@@ -403,7 +403,7 @@ app.get('/api/embed-token/customer', async (req, res) => {
       tenantId: me.tenantId,
       expiresIn: 60 * 60 * 1000,
       allowedActions: ['secret.*'],
-      // Customer (tenant-scoped) tokens also get AI + Query —
+      // Customer (tenant-scoped) tokens also get AI + Query -
       // the partner has opted their end users into both. Server-
       // side, tenantId is still enforced on every read, so the
       // NLP-generated DSL is naturally tenant-scoped.

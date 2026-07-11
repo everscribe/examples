@@ -5,9 +5,9 @@ frontend is plain TypeScript + DOM manipulation. The audit-log embeds
 are two `<audit-trail>` custom elements from
 `@everscribe/components-element`, each minted with a different scope:
 
-- **Customer view** — token scoped to the actor's tenant. Embed only
+- **Customer view** - token scoped to the actor's tenant. Embed only
   shows that tenant's events.
-- **Admin view** — token has no `tenant_id`. Embed shows events across
+- **Admin view** - token has no `tenant_id`. Embed shows events across
   every tenant in the project.
 
 The full security framing lives in the [repo root README](../../README.md).
@@ -16,7 +16,7 @@ This file is just how to run.
 ## Prerequisites
 
 - Go 1.25+
-- Node 18+ (for Vite — the bundler)
+- Node 18+ (for Vite - the bundler)
 - An Everscribe project with a `proj_*` ID and an `evs_*` API key
 
 ## Setup
@@ -46,7 +46,7 @@ Open <http://localhost:5173>.
 
 ## Demo cast
 
-Two tenants, two users each — same as the React multi variant.
+Two tenants, two users each - same as the React multi variant.
 
 | User              | Role   | Tenant   |
 |-------------------|--------|----------|
@@ -67,12 +67,12 @@ The Go backend is identical. On the frontend:
 | Audit embed                      | `<AuditTrail />`        | `<audit-trail>` custom element |
 | Tab switching                    | Conditional render      | Toggle parent `display`       |
 | Customer embed actor change      | `key` prop remount      | `replaceWith(...)` on actor change |
-| Customer embed token fetch       | `onTokenExpired` callback (sends X-Demo-Actor) | Same — JS-only `onTokenExpired` property on the element |
+| Customer embed token fetch       | `onTokenExpired` callback (sends X-Demo-Actor) | Same - JS-only `onTokenExpired` property on the element |
 
 ### Why `onTokenExpired` for the customer embed?
 
 The component's built-in `tokenEndpoint` fetcher only sends
-`credentials: 'include'` — no custom headers. Our
+`credentials: 'include'` - no custom headers. Our
 `/api/embed-token/customer` reads `X-Demo-Actor` to identify the
 actor's tenant; without that header it 401s. `onTokenExpired` lets us
 write the fetch ourselves and attach the header. The Admin endpoint

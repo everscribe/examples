@@ -1,6 +1,6 @@
 // Vanilla TS vault UI. The audit-log embed is the <audit-trail> custom
 // element from @everscribe/components-element (auto-registered when
-// imported in main.ts). The rest is plain DOM manipulation — no
+// imported in main.ts). The rest is plain DOM manipulation - no
 // framework, just structured event handlers and a small `el(...)`
 // helper to keep markup readable.
 import { api, getActorId, setActorId, type Secret, type User } from './api.js'
@@ -32,7 +32,7 @@ const state: State = {
   dialog: null,
 }
 
-// Stable section roots — built once on mount. The audit-trail embed
+// Stable section roots - built once on mount. The audit-trail embed
 // lives inside `embedSection` and is NEVER replaced after mount, so
 // it doesn't refetch tokens on every state change.
 let topbarEl!: HTMLElement

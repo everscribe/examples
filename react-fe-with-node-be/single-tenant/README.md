@@ -1,7 +1,7 @@
 # React frontend + Node backend · single-tenant
 
-Same secrets-vault demo as the React+Go variant — same UI, same actor
-flow, same audit verbs — but the backend is Node + Express + sdk-node.
+Same secrets-vault demo as the React+Go variant - same UI, same actor
+flow, same audit verbs - but the backend is Node + Express + sdk-node.
 The frontend is byte-identical (`frontend/` is a fork of the Go variant's
 `web/`).
 
@@ -25,7 +25,7 @@ cp .env.example .env
 ```sh
 npm install        # backend deps
 npm run build      # builds frontend/dist (also runs npm install in frontend/)
-npm start          # tsx backend/index.ts — serves API + static frontend/dist
+npm start          # tsx backend/index.ts - serves API + static frontend/dist
 ```
 
 Open <http://localhost:9000>. One process, one port.
@@ -58,7 +58,7 @@ The frontend is unchanged. On the backend:
 | Record idiom          | `defer rec.Record(ctx, e)`                       | Set `req.event!.action`; middleware auto-records on response finish |
 | Token mint            | `m.MintToken(ctx, minter.TokenOptions{...})`     | `await minter.mintToken({ ... })`                         |
 | Static files          | `//go:embed all:web/dist`                        | `express.static(path.join(__dirname, '..', 'frontend', 'dist'))` |
-| Single binary?        | Yes — `make build` produces `bin/server`         | No — runs via `tsx backend/index.ts`; serves dist/ from disk  |
+| Single binary?        | Yes - `make build` produces `bin/server`         | No - runs via `tsx backend/index.ts`; serves dist/ from disk  |
 
 ### About the "single binary" difference
 

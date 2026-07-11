@@ -2,7 +2,7 @@
 
 Same secrets-vault demo as the React and Vanilla JS variants. The audit
 embed is the `<audit-trail>` custom element from
-`@everscribe/components-element` — Svelte renders it like any other tag,
+`@everscribe/components-element` - Svelte renders it like any other tag,
 no wrapper needed. The vault UI is a single-component Svelte 5 app
 using runes (`$state`, `$derived`, `$effect`).
 
@@ -51,7 +51,7 @@ The Go backend is identical. On the frontend:
 | Markup               | JSX                         | `el(tag, attrs, ...)` helper     | `.svelte` template syntax        |
 | Bundle (gzip)        | ~56 KB                      | ~12 KB                           | ~28 KB                           |
 
-Same `<audit-trail>` web component as the Vanilla example — Svelte just
+Same `<audit-trail>` web component as the Vanilla example - Svelte just
 mounts it inside its own templating. See `App.svelte` for how the
 `token-endpoint`, `poll-interval`, etc. attributes flow through.
 

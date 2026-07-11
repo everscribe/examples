@@ -42,7 +42,7 @@ export function App() {
     void refresh()
   }, [])
 
-  // Auto-select the first user if none stored — saves the viewer a click.
+  // Auto-select the first user if none stored - saves the viewer a click.
   useEffect(() => {
     if (!actorId && users.length > 0) {
       pickActor(users[0].id)
@@ -135,7 +135,7 @@ export function App() {
 
   const closeDialog = () => setDialog(null)
 
-  // Candidates for share dialog — exclude the current user and anyone
+  // Candidates for share dialog - exclude the current user and anyone
   // already shared with.
   const shareCandidates =
     dialog?.kind === 'share'

@@ -66,7 +66,7 @@ Open <http://localhost:5173>.
 
 - Frontend = Svelte 5 (`App.svelte`) using runes + the `<audit-trail>` custom
   element from `@everscribe/components-element`. Same component as the Vanilla
-  JS variants — Svelte just mounts it inside its own templating.
+  JS variants - Svelte just mounts it inside its own templating.
 - Backend = Python + FastAPI + the Everscribe Python SDK, using
   `EverscribeMiddleware` and `current_event()`. Byte-identical to the
   React+Python variant's `backend/app.py` (the backend only serves `/api`

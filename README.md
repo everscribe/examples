@@ -1,32 +1,14 @@
 # Everscribe examples
 
-End-to-end demos of [Everscribe](https://everscribe.io) — the embeddable
-audit-log platform — across twelve frontend × backend stack combinations,
+End-to-end demos of [Everscribe](https://everscribe.io) - the embeddable
+audit-log platform - across twelve frontend × backend stack combinations,
 each in single-tenant and multi-tenant variants. **Twenty-four runnable
 examples**, all built around the same domain so you can compare
 integration shapes without learning a new app each time.
 
 ---
 
-## Why audit logging belongs in your app
-
-When something bad happens, only one question matters: *what changed,
-who did it, and when?*
-
-- **A leaked API key gets used at 3am from an unfamiliar IP.** Was it
-  your build server, a teammate, or an attacker who exfiltrated it
-  three weeks ago? Without an audit log you can't tell.
-- **A customer reports their data was modified.** Your support team
-  needs to answer *which* admin made the change and from where —
-  before legal does.
-- **You're going through SOC 2.** The auditor wants every privileged
-  operation reconstructable for the past 12 months. "We have logs" is
-  not the same as "we have a tamper-evident, queryable audit trail."
-- **Your customers ask for their own audit log.** B2B SaaS buyers
-  increasingly require their tenant's audit history as a feature, not
-  a backend ops convenience.
-
-These examples use a **secrets vault** — the kind of app where the
+These examples use a **secrets vault** - the kind of app where the
 audit log isn't an afterthought, it *is* the trust boundary. Every
 example records a `secret.reveal` event when a value is exposed, and
 mounts an embedded `<AuditTrail>` component that lets users see those
@@ -112,7 +94,7 @@ glue between Everscribe and your stack.
 | Revoke    | `DELETE /api/secrets/{id}`            | `secret.revoke`                               |
 
 The `rotate` handler is the canonical example of `WithRedactedFields`
-in action — the audit diff sees `value: "[REDACTED]"` on both sides,
+in action - the audit diff sees `value: "[REDACTED]"` on both sides,
 not the plaintext.
 
 ### The audit trail panel
@@ -135,7 +117,7 @@ frameworks doesn't mean re-learning the embed.
 | Customer-view scope  | n/a                               | Token has `tenantId` set; embed shows only this tenant's events |
 | Admin-view scope     | n/a                               | No `tenantId`; embed shows all tenants in the project |
 | Tenants in seed data | n/a (one implicit tenant)         | 2 (Acme, Initech), 2 users each |
-| Switching tenants    | n/a                               | Via the login dropdown — picking a user from a different tenant re-scopes the customer embed |
+| Switching tenants    | n/a                               | Via the login dropdown - picking a user from a different tenant re-scopes the customer embed |
 
 The multi-tenant variants are what you reach for if you're building a
 SaaS where each customer has their own workspace and their own audit
@@ -178,7 +160,7 @@ doesn't block the request path.
 tenant, columns, action filters) so your customer's browser can mount
 `<AuditTrail>` without ever seeing your project API key.
 
-These two surfaces — Recorder + Minter — are what every example wires
+These two surfaces - Recorder + Minter - are what every example wires
 up. Everything else is just app code.
 
 ---
@@ -223,7 +205,7 @@ published versions.
 | `*-with-rust-be/` | Rust 1.85+, Node 20+, an Everscribe project |
 
 All examples need an Everscribe project ID (`proj_*`) and API key
-(`evs_*`) — set them in `.env` per each example's instructions.
+(`evs_*`) - set them in `.env` per each example's instructions.
 
 ---
 
@@ -255,7 +237,7 @@ Not sure where to begin?
 
 - The frontend's login dropdown sets an `X-Demo-Actor` header that the
   backend reads to know who's calling. **Real apps replace this with
-  real auth** (session cookie, JWT, OAuth) — the demo header is a
+  real auth** (session cookie, JWT, OAuth) - the demo header is a
   shortcut so the audit middleware has a real Actor to attach to events
   without dragging in an auth library.
 - The vault is in-memory; secrets reset on restart. **Real apps store
@@ -264,7 +246,7 @@ Not sure where to begin?
 - The multi-tenant customer-embed token endpoint requires
   `X-Demo-Actor` to identify the actor's tenant. The audit component's
   built-in `tokenEndpoint` fetcher only sends `credentials: 'include'`
-  — no custom headers — so the customer embed uses the
+  - no custom headers - so the customer embed uses the
   `onTokenExpired` callback (or equivalent in Svelte/Vanilla) to
   attach the header. See the per-example READMEs for details.
 

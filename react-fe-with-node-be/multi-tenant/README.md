@@ -1,8 +1,8 @@
 # React frontend + Node backend · multi-tenant
 
-Same multi-tenant secrets-vault demo as the React+Go multi variant —
+Same multi-tenant secrets-vault demo as the React+Go multi variant -
 two seeded tenants, Customer view scoped via `tenantId`, Admin view
-cross-tenant — but the backend is Node + Express + sdk-node. The
+cross-tenant - but the backend is Node + Express + sdk-node. The
 frontend is byte-identical to the React+Go multi variant.
 
 The full security framing lives in the [repo root README](../../README.md).
@@ -25,7 +25,7 @@ cp .env.example .env
 ```sh
 npm install        # backend deps
 npm run build      # builds frontend/dist
-npm start          # tsx backend/index.ts — serves API + static frontend/dist
+npm start          # tsx backend/index.ts - serves API + static frontend/dist
 ```
 
 Open <http://localhost:9000>.
@@ -46,7 +46,7 @@ Open <http://localhost:5173>. Output is colour-prefixed (`backend` /
 
 ## Demo cast
 
-Two tenants, two users each — same as the other multi variants.
+Two tenants, two users each - same as the other multi variants.
 
 | User              | Role   | Tenant   |
 |-------------------|--------|----------|
@@ -60,7 +60,7 @@ tenant the Customer view scopes to.
 
 ## What's different from the React+Go multi variant?
 
-The frontend is unchanged — same `App.tsx`, same `onTokenExpired`
+The frontend is unchanged - same `App.tsx`, same `onTokenExpired`
 callback for the customer embed (the component's built-in tokenEndpoint
 fetcher only sends `credentials: 'include'`, not custom headers, so we
 need a custom fetcher to attach `X-Demo-Actor`).
@@ -78,8 +78,8 @@ On the backend:
 
 The two-mint-endpoints pattern is identical:
 
-- `/api/embed-token/admin` — no `tenantId` → cross-tenant view
-- `/api/embed-token/customer` — `tenantId = me.tenantId` → tenant-scoped view (requires `X-Demo-Actor` header)
+- `/api/embed-token/admin` - no `tenantId` → cross-tenant view
+- `/api/embed-token/customer` - `tenantId = me.tenantId` → tenant-scoped view (requires `X-Demo-Actor` header)
 
 ## Verbs and events
 

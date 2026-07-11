@@ -4,8 +4,8 @@
 //
 // Note: the customer-tab embed uses the JS-only `onTokenExpired`
 // property instead of the `token-endpoint` attribute. The web component's
-// built-in token fetch sends only `credentials: 'include'` — no custom
-// headers — but our /api/embed-token/customer needs `X-Demo-Actor` to
+// built-in token fetch sends only `credentials: 'include'` - no custom
+// headers - but our /api/embed-token/customer needs `X-Demo-Actor` to
 // know which tenant to scope to. The callback gives us a place to
 // attach the header.
 import {
@@ -252,8 +252,8 @@ function customerScopeHint(): (Node | string)[] {
   const me = currentUser()
   return [
     document.createTextNode('Token scoped to '),
-    code(`tenant_id=${me?.tenant_id ?? '—'}`),
-    document.createTextNode(" — only this tenant's events are visible."),
+    code(`tenant_id=${me?.tenant_id ?? '-'}`),
+    document.createTextNode(" - only this tenant's events are visible."),
   ]
 }
 
@@ -263,7 +263,7 @@ function renderVault() {
   vaultSection.replaceChildren(
     el('section', { className: 'panel labeled' },
       el('div', { className: 'label-corner' },
-        `your code · vault UI (${myTenant?.name ?? '—'})`),
+        `your code · vault UI (${myTenant?.name ?? '-'})`),
       el('div', { className: 'panel-body' },
         el('div', { className: 'vault-header' },
           el('h2', {}, `Vault (${state.secrets.length})`),
@@ -394,7 +394,7 @@ function buildCustomerEmbed(): AuditTrailEl {
   audit.setAttribute('theme', 'light')
   audit.setAttribute('default-time-range', '7d')
   // JS callback (not the token-endpoint attribute) so we can send
-  // X-Demo-Actor — required for /api/embed-token/customer to identify
+  // X-Demo-Actor - required for /api/embed-token/customer to identify
   // the actor's tenant.
   audit.onTokenExpired = async () => {
     const res = await fetch('/api/embed-token/customer', {
@@ -429,7 +429,7 @@ function buildAdminSection(): HTMLElement {
       el('p', { className: 'scope-hint' },
         document.createTextNode('Token has no '),
         code('tenant_id'),
-        document.createTextNode(" — events from every tenant in the project are visible. This is your business's internal console."),
+        document.createTextNode(" - events from every tenant in the project are visible. This is your business's internal console."),
       ),
       audit,
     ),

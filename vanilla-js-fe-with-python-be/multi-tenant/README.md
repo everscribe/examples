@@ -55,7 +55,7 @@ Open <http://localhost:5173>.
 ## Notes
 
 - The customer-tab embed sets `onTokenExpired` directly on the `<audit-trail>`
-  element instance before appending it to the DOM — required because
+  element instance before appending it to the DOM - required because
   `/api/embed-token/customer` reads `X-Demo-Actor`, which the component's
   built-in fetcher doesn't send.
 - When the actor changes, the customer embed is replaced with a fresh element

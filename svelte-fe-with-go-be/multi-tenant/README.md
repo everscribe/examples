@@ -5,9 +5,9 @@ variants. The frontend is Svelte 5 with runes; the audit embeds are two
 `<audit-trail>` custom elements from `@everscribe/components-element`,
 each minted with a different scope:
 
-- **Customer view** — token scoped to the actor's tenant. Embed only
+- **Customer view** - token scoped to the actor's tenant. Embed only
   shows that tenant's events.
-- **Admin view** — token has no `tenant_id`. Embed shows events across
+- **Admin view** - token has no `tenant_id`. Embed shows events across
   every tenant.
 
 The full security framing lives in the [repo root README](../../README.md).
@@ -46,7 +46,7 @@ Open <http://localhost:5173>.
 
 ## Demo cast
 
-Two tenants, two users each — same as the other multi-tenant variants.
+Two tenants, two users each - same as the other multi-tenant variants.
 
 | User              | Role   | Tenant   |
 |-------------------|--------|----------|

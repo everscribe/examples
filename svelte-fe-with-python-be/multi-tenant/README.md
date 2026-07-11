@@ -57,7 +57,7 @@ Open <http://localhost:5173>.
 
 - The customer-tab embed uses a Svelte action (`use:customerAuditTrail`) to
   create the `<audit-trail>` element imperatively and set `onTokenExpired`
-  *before* mount — the element runs its bootstrap check in
+  *before* mount - the element runs its bootstrap check in
   `connectedCallback` and would otherwise error out before Svelte's
   `bind:this` + `$effect` could attach the property.
 - The customer mint endpoint (`/api/embed-token/customer`) requires the

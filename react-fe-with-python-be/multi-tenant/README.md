@@ -1,8 +1,8 @@
 # React frontend + Python backend · multi-tenant
 
 Same multi-tenant secrets-vault demo as the React+Node and React+Go multi
-variants — two seeded tenants, Customer view scoped via `tenant_id`, Admin
-view cross-tenant — but the backend is Python + FastAPI + the Everscribe
+variants - two seeded tenants, Customer view scoped via `tenant_id`, Admin
+view cross-tenant - but the backend is Python + FastAPI + the Everscribe
 Python SDK. The frontend is byte-identical to the Node variant's `frontend/`.
 
 The full security framing lives in the [repo root README](../../README.md).
@@ -34,7 +34,7 @@ Open <http://localhost:9000>.
 
 ## Run (development, with HMR)
 
-Two terminals — uvicorn's reloader and the Vite dev server (which proxies
+Two terminals - uvicorn's reloader and the Vite dev server (which proxies
 `/api/*` to `:9000`):
 
 ```sh
@@ -49,7 +49,7 @@ Open <http://localhost:5173>.
 
 ## Demo cast
 
-Two tenants, two users each — same as the other multi variants.
+Two tenants, two users each - same as the other multi variants.
 
 | User           | Role   | Tenant   |
 |----------------|--------|----------|
@@ -63,7 +63,7 @@ the Customer view scopes to.
 
 ## What's different from the React+Node multi variant?
 
-The frontend is unchanged — same `App.tsx`, same `onTokenExpired` callback
+The frontend is unchanged - same `App.tsx`, same `onTokenExpired` callback
 for the customer embed (the component's built-in `tokenEndpoint` fetcher only
 sends `credentials: 'include'`, not custom headers, so a custom fetcher is
 needed to attach `X-Demo-Actor`).
@@ -81,8 +81,8 @@ On the backend:
 
 The two-mint-endpoints pattern is identical:
 
-- `/api/embed-token/admin` — no `tenant_id` → cross-tenant view
-- `/api/embed-token/customer` — `tenant_id = me.tenant_id` → tenant-scoped view (requires `X-Demo-Actor` header)
+- `/api/embed-token/admin` - no `tenant_id` → cross-tenant view
+- `/api/embed-token/customer` - `tenant_id = me.tenant_id` → tenant-scoped view (requires `X-Demo-Actor` header)
 
 Each mutating handler resolves the actor from `X-Demo-Actor`, sets
 `current_event().tenant_id = me.tenant_id`, and scopes the vault lookup to

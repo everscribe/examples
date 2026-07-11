@@ -25,7 +25,7 @@ cp .env.example .env
 ```sh
 npm install
 npm run build      # builds frontend/dist
-npm start          # tsx backend/index.ts — serves API + static frontend/dist
+npm start          # tsx backend/index.ts - serves API + static frontend/dist
 ```
 
 Open <http://localhost:9000>.
@@ -64,7 +64,7 @@ Open <http://localhost:5173>. Output is colour-prefixed (`backend` /
 
 - Frontend = Svelte 5 (`App.svelte`) using runes + the `<audit-trail>`
   custom element from `@everscribe/components-element`. Same component
-  as the Vanilla JS variants — Svelte just mounts it inside its own
+  as the Vanilla JS variants - Svelte just mounts it inside its own
   templating.
 - Backend = Node + Express + `@everscribe/sdk-node`. Same code as the
   React+Node variant.

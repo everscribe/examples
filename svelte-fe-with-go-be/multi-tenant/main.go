@@ -6,8 +6,8 @@
 // and (b) which TenantID lands on the recorded audit events. Two embed-
 // token endpoints scope <AuditTrail /> two ways:
 //
-//   - /api/embed-token/admin    — no TenantID, cross-tenant view
-//   - /api/embed-token/customer — TenantID = actor's tenant, scoped view
+//   - /api/embed-token/admin    - no TenantID, cross-tenant view
+//   - /api/embed-token/customer - TenantID = actor's tenant, scoped view
 package main
 
 import (
@@ -37,7 +37,7 @@ import (
 //go:embed all:web/dist
 var staticFS embed.FS
 
-// Config — see .env.example. The 'required' tag surfaces missing
+// Config - see .env.example. The 'required' tag surfaces missing
 // credentials clearly at startup.
 type Config struct {
 	ProjectID string `env:"EVERSCRIBE_PROJECT_ID,required"`
@@ -69,7 +69,7 @@ type Secret struct {
 	ID         string     `json:"id"`
 	Name       string     `json:"name"`
 	TenantID   string     `json:"tenant_id"`
-	value      string     // unexported — never marshaled
+	value      string     // unexported - never marshaled
 	CreatedBy  string     `json:"created_by"`
 	CreatedAt  time.Time  `json:"created_at"`
 	RotatedAt  *time.Time `json:"rotated_at,omitempty"`
@@ -79,7 +79,7 @@ type Secret struct {
 }
 
 // vault stores secrets partitioned by tenant. All operations are
-// tenant-scoped — the actor's tenant determines which subset they can
+// tenant-scoped - the actor's tenant determines which subset they can
 // see and mutate.
 type vault struct {
 	mu      sync.Mutex
@@ -128,7 +128,7 @@ func (v *vault) listForTenant(tenantID string) []*Secret {
 	return out
 }
 
-// secretSnapshot is the redacted shape used in event diffs — value is
+// secretSnapshot is the redacted shape used in event diffs - value is
 // always "[REDACTED]" so plaintext never leaves the process via the
 // audit log.
 type secretSnapshot struct {
@@ -565,7 +565,7 @@ func expireSecret(v *vault, users map[string]User, rec recorder.Recorder) http.H
 	}
 }
 
-// embedTokenAdmin mints a token with no TenantID set — the embed sees
+// embedTokenAdmin mints a token with no TenantID set - the embed sees
 // events across all tenants in the project. This is the "your business's
 // internal console" view.
 func embedTokenAdmin(m *minter.Client) http.HandlerFunc {
@@ -586,7 +586,7 @@ func embedTokenAdmin(m *minter.Client) http.HandlerFunc {
 	}
 }
 
-// embedTokenCustomer mints a token scoped to the actor's tenant — the
+// embedTokenCustomer mints a token scoped to the actor's tenant - the
 // embed sees only that tenant's events. This is what your customer's
 // user sees inside their workspace in production.
 func embedTokenCustomer(m *minter.Client, users map[string]User) http.HandlerFunc {
@@ -600,7 +600,7 @@ func embedTokenCustomer(m *minter.Client, users map[string]User) http.HandlerFun
 			TenantID:       me.TenantID,
 			ExpiresIn:      time.Hour,
 			AllowedActions: []string{"secret.*"},
-			// Customer (tenant-scoped) tokens also get AI + Query —
+			// Customer (tenant-scoped) tokens also get AI + Query -
 			// the partner has opted their end users into both. Server-
 			// side, TenantID is still enforced on every read, so the
 			// NLP-generated DSL is naturally tenant-scoped.

@@ -63,7 +63,7 @@ export function App() {
     void refresh()
   }, [])
 
-  // Auto-select the first user if none stored — saves the viewer a click.
+  // Auto-select the first user if none stored - saves the viewer a click.
   useEffect(() => {
     if (!actorId && users.length > 0) {
       pickActor(users[0].id)
@@ -234,7 +234,7 @@ export function App() {
         <>
           <section className="panel labeled">
             <div className="label-corner">
-              your code · vault UI ({myTenant?.name ?? '—'})
+              your code · vault UI ({myTenant?.name ?? '-'})
             </div>
 
             <div className="panel-body">
@@ -308,7 +308,7 @@ export function App() {
             <div className="label-corner">Embedded Everscribe Component</div>
             <div className="panel-body">
               <p className="scope-hint">
-                Token scoped to <code>tenant_id={myTenant?.id ?? '—'}</code> —
+                Token scoped to <code>tenant_id={myTenant?.id ?? '-'}</code> -
                 only this tenant's events are visible.
               </p>
               <AuditTrail
@@ -339,7 +339,7 @@ export function App() {
           <div className="label-corner">Embedded Everscribe Component</div>
           <div className="panel-body">
             <p className="scope-hint">
-              Token has no <code>tenant_id</code> — events from every tenant in
+              Token has no <code>tenant_id</code> - events from every tenant in
               the project are visible. This is your business's internal console.
             </p>
             <AuditTrail

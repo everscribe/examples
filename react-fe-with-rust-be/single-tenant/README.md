@@ -1,7 +1,7 @@
 # React frontend + Rust backend · single-tenant
 
-Same secrets-vault demo as the React+Node/Go/Python variants — same UI, same
-actor flow, same audit verbs — but the backend is Rust + axum + the Everscribe
+Same secrets-vault demo as the React+Node/Go/Python variants - same UI, same
+actor flow, same audit verbs - but the backend is Rust + axum + the Everscribe
 Rust SDK. The frontend is byte-identical to the Node variant's `frontend/`.
 
 The full security framing lives in the [repo root README](../../README.md).

@@ -2,10 +2,10 @@
 
 Secrets-vault demo with two seeded tenants. The UI has two tabs:
 
-- **Customer view** — what your customer's user sees inside their workspace.
+- **Customer view** - what your customer's user sees inside their workspace.
   `<AuditTrail />` is scoped to the actor's tenant via `tenant_id` on the minted
   embed token.
-- **Admin view** — your business's internal console. `<AuditTrail />` is minted
+- **Admin view** - your business's internal console. `<AuditTrail />` is minted
   with no `tenant_id`, so it sees events across every tenant in the project.
 
 The full security framing lives in the [repo root README](../../README.md).
@@ -58,7 +58,7 @@ Two tenants, two users each:
 
 Picking a user from the login dropdown changes both the actor on recorded
 events and the tenant the Customer view scopes to. The Admin view ignores
-tenant — pick any user and switch tabs to see all-tenant events.
+tenant - pick any user and switch tabs to see all-tenant events.
 
 The vault is partitioned per-tenant: Ada and Linus see Acme's secrets, Grace
 and Alan see Initech's. Cross-tenant access (e.g. Grace trying to reveal an
@@ -80,7 +80,7 @@ tenant>` so the Customer-view embed can filter to it server-side.
 
 ## What to look at
 
-- `embedTokenAdmin` vs `embedTokenCustomer` in [main.go](main.go) — same
+- `embedTokenAdmin` vs `embedTokenCustomer` in [main.go](main.go) - same
   call, different `minter.TokenOptions{TenantID: ...}` for the customer
   variant. This is the entire scoping mechanism.
 - The `key` prop on each `<AuditTrail />` mount in
