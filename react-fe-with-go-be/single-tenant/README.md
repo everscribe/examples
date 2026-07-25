@@ -62,11 +62,13 @@ in the audit trail.
 
 - `//go:embed all:web/dist` and `newStaticHandler` in
   [main.go](main.go) bake the React app into the binary.
-- Every mutating handler uses the `defer rec.Record(...)` idiom with
-  `event.FromContext(ctx)`.
+- Every mutating handler pulls the request event with `event.Current(ctx)`
+  and sets its `Action`, `Target`, and fields; the audit middleware records
+  it automatically once the handler returns, so handlers never call `Record`
+  directly.
 - `withActorHeader` reads `X-Demo-Actor` (set by the login dropdown via
   `localStorage`) and plants the id on context; `actorResolver` then
-  uses it inside `event.NewMiddleware`.
+  uses it inside `event.Middleware`.
 - `<AuditTrail tokenEndpoint="/api/embed-token" defaultTimeRange="7d" />`
   is mounted in [web/src/App.tsx](web/src/App.tsx), wrapped in a dashed
   border + corner badge so it's visually obvious which pixels are the

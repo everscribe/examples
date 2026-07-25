@@ -167,15 +167,18 @@ func main() {
 	})
 	apiMux.HandleFunc("GET /api/users", listUsersHandler(users))
 	apiMux.HandleFunc("GET /api/secrets", listSecrets(v))
-	apiMux.HandleFunc("POST /api/secrets", createSecret(v, rec))
-	apiMux.HandleFunc("POST /api/secrets/{id}/reveal", revealSecret(v, rec))
-	apiMux.HandleFunc("DELETE /api/secrets/{id}", revokeSecret(v, rec))
-	apiMux.HandleFunc("POST /api/secrets/{id}/rotate", rotateSecret(v, rec))
-	apiMux.HandleFunc("POST /api/secrets/{id}/share", shareSecret(v, users, rec))
-	apiMux.HandleFunc("POST /api/secrets/{id}/expire", expireSecret(v, rec))
+	apiMux.HandleFunc("POST /api/secrets", createSecret(v))
+	apiMux.HandleFunc("POST /api/secrets/{id}/reveal", revealSecret(v))
+	apiMux.HandleFunc("DELETE /api/secrets/{id}", revokeSecret(v))
+	apiMux.HandleFunc("POST /api/secrets/{id}/rotate", rotateSecret(v))
+	apiMux.HandleFunc("POST /api/secrets/{id}/share", shareSecret(v, users))
+	apiMux.HandleFunc("POST /api/secrets/{id}/expire", expireSecret(v))
 	apiMux.HandleFunc("GET /api/embed-token", embedToken(mint))
 
-	auditMW := event.NewMiddleware(actorResolver(users))
+	auditMW := event.Middleware(event.Options{
+		ActorResolver: actorResolver(users),
+		Recorder:      rec,
+	})
 	// withActorHeader must run BEFORE auditMW so the X-Demo-Actor value
 	// lands on context before actorResolver is invoked.
 	apiHandler := withActorHeader(auditMW(apiMux))
@@ -236,7 +239,7 @@ type actorIDKey struct{}
 
 // withActorHeader plants the X-Demo-Actor header value on the request
 // context so actorResolver (run from inside the audit middleware) can
-// see it. Order matters: this must run BEFORE event.NewMiddleware.
+// see it. Order matters: this must run BEFORE event.Middleware.
 func withActorHeader(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		actor := r.Header.Get("X-Demo-Actor")
@@ -262,10 +265,9 @@ func listSecrets(v *vault) http.HandlerFunc {
 	}
 }
 
-func createSecret(v *vault, rec recorder.Recorder) http.HandlerFunc {
+func createSecret(v *vault) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		e := event.FromContext(r.Context())
-		defer func() { _ = rec.Record(r.Context(), e) }()
+		e := event.Current(r.Context())
 
 		var in struct {
 			Name  string `json:"name"`
@@ -291,12 +293,11 @@ func createSecret(v *vault, rec recorder.Recorder) http.HandlerFunc {
 	}
 }
 
-func revealSecret(v *vault, rec recorder.Recorder) http.HandlerFunc {
+func revealSecret(v *vault) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		id := r.PathValue("id")
-		e := event.FromContext(r.Context())
+		e := event.Current(r.Context())
 		e.Target = event.Target{Type: "secret", ID: id}
-		defer func() { _ = rec.Record(r.Context(), e) }()
 
 		s, ok := v.get(id)
 		if !ok {
@@ -315,12 +316,11 @@ func revealSecret(v *vault, rec recorder.Recorder) http.HandlerFunc {
 	}
 }
 
-func revokeSecret(v *vault, rec recorder.Recorder) http.HandlerFunc {
+func revokeSecret(v *vault) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		id := r.PathValue("id")
-		e := event.FromContext(r.Context())
+		e := event.Current(r.Context())
 		e.Target = event.Target{Type: "secret", ID: id}
-		defer func() { _ = rec.Record(r.Context(), e) }()
 
 		v.mu.Lock()
 		s, ok := v.secrets[id]
@@ -343,12 +343,11 @@ func revokeSecret(v *vault, rec recorder.Recorder) http.HandlerFunc {
 	}
 }
 
-func rotateSecret(v *vault, rec recorder.Recorder) http.HandlerFunc {
+func rotateSecret(v *vault) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		id := r.PathValue("id")
-		e := event.FromContext(r.Context())
+		e := event.Current(r.Context())
 		e.Target = event.Target{Type: "secret", ID: id}
-		defer func() { _ = rec.Record(r.Context(), e) }()
 
 		var in struct {
 			Value string `json:"value"`
@@ -389,12 +388,11 @@ func rotateSecret(v *vault, rec recorder.Recorder) http.HandlerFunc {
 	}
 }
 
-func shareSecret(v *vault, users map[string]User, rec recorder.Recorder) http.HandlerFunc {
+func shareSecret(v *vault, users map[string]User) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		id := r.PathValue("id")
-		e := event.FromContext(r.Context())
+		e := event.Current(r.Context())
 		e.Target = event.Target{Type: "secret", ID: id}
-		defer func() { _ = rec.Record(r.Context(), e) }()
 
 		var in struct {
 			UserID string `json:"user_id"`
@@ -436,12 +434,11 @@ func shareSecret(v *vault, users map[string]User, rec recorder.Recorder) http.Ha
 	}
 }
 
-func expireSecret(v *vault, rec recorder.Recorder) http.HandlerFunc {
+func expireSecret(v *vault) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		id := r.PathValue("id")
-		e := event.FromContext(r.Context())
+		e := event.Current(r.Context())
 		e.Target = event.Target{Type: "secret", ID: id}
-		defer func() { _ = rec.Record(r.Context(), e) }()
 
 		var in struct {
 			InMinutes int `json:"in_minutes"`
