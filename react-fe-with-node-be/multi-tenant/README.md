@@ -71,7 +71,7 @@ On the backend:
 |----------------------|-----------------------------------------------------|-----------------------------------------------------------|
 | HTTP layer           | `net/http`                                          | Express                                                   |
 | SDK                  | `github.com/everscribe/sdk-go`                      | `@everscribe/sdk-node`                                    |
-| Audit middleware     | `event.NewMiddleware(actorResolver)`                | `expressMiddleware({ recorder, resolveActor })`           |
+| Audit middleware     | `event.Middleware(event.Options{...})`                | `expressMiddleware({ recorder, resolveActor })`           |
 | Per-event tenantId   | `e.TenantID = me.TenantID`                          | `req.event!.tenantId = me.tenantId` (camelCase in TS)     |
 | Token mint           | `m.MintToken(ctx, minter.TokenOptions{TenantID:...})` | `await minter.mintToken({ tenantId: ... })`             |
 | Static files         | `//go:embed all:web/dist`                           | `express.static('frontend/dist')`                         |

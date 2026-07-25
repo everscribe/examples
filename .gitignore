@@ -8,3 +8,4 @@ bin/
 # Stray bare `go build` output (the real build target is bin/server)
 *-fe-with-go-be/multi-tenant/multi-tenant
 *-fe-with-go-be/single-tenant/single-tenant
+.migration-report.md

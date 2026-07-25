@@ -45,9 +45,9 @@ The frontend is unchanged. On the backend:
 |-----------------------|--------------------------------------------------|-----------------------------------------------------------|
 | HTTP layer            | `net/http` + `http.ServeMux`                     | Express                                                   |
 | SDK package           | `github.com/everscribe/sdk-go`                   | `@everscribe/sdk-node`                                    |
-| Audit middleware      | `event.NewMiddleware(actorResolver)`             | `expressMiddleware({ recorder, resolveActor })` from `@everscribe/sdk-node/express` |
-| Per-request event     | `event.FromContext(r.Context())`                 | `req.event!` (installed by the middleware)                |
-| Record idiom          | `defer rec.Record(ctx, e)`                       | Set `req.event!.action`; middleware auto-records on response finish |
+| Audit middleware      | `event.Middleware(event.Options{...})`             | `expressMiddleware({ recorder, resolveActor })` from `@everscribe/sdk-node/express` |
+| Per-request event     | `event.Current(r.Context())`                 | `req.event!` (installed by the middleware)                |
+| Record idiom          | Set `e.Action`; adapter auto-records                       | Set `req.event!.action`; middleware auto-records on response finish |
 | Token mint            | `m.MintToken(ctx, minter.TokenOptions{...})`     | `await minter.mintToken({ ... })`                         |
 | Static files          | `//go:embed all:web/dist`                        | `express.static(path.join(__dirname, '..', 'frontend', 'dist'))` |
 | Single binary?        | Yes - `make build` produces `bin/server`         | No - runs via `tsx backend/index.ts`; serves dist/ from disk  |
