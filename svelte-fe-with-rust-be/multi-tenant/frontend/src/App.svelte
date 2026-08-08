@@ -66,6 +66,7 @@
       // actor's tenant. The built-in tokenEndpoint fetcher only sends
       // `credentials: 'include'`, so we attach the header here.
       const res = await fetch('/api/embed-token/customer', {
+        method: 'POST',
         headers: { 'X-Demo-Actor': getActorId() },
       })
       if (!res.ok) throw new Error(`mint failed: ${res.status}`)

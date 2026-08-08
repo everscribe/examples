@@ -438,8 +438,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .route("/secrets/:id/share", post(share))
         .route("/secrets/:id/expire", post(expire))
         .route("/secrets/:id", delete(revoke))
-        .route("/embed-token/admin", get(embed_token_admin))
-        .route("/embed-token/customer", get(embed_token_customer))
+        .route("/embed-token/admin", post(embed_token_admin))
+        .route("/embed-token/customer", post(embed_token_customer))
         .layer(EverscribeLayer::new(rec, move |p: &Parts| resolve_actor(p, &users_for_resolver)))
         .with_state(state);
 

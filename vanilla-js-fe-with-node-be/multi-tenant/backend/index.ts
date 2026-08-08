@@ -375,7 +375,7 @@ app.post('/api/secrets/:id/expire', (req, res) => {
 })
 
 // Admin embed: token has no tenantId - cross-tenant view of all events.
-app.get('/api/embed-token/admin', async (_req, res) => {
+app.post('/api/embed-token/admin', async (_req, res) => {
   try {
     const token = await minter.mintToken({
       expiresIn: 60 * 60 * 1000,
@@ -384,6 +384,9 @@ app.get('/api/embed-token/admin', async (_req, res) => {
       allowDSLInput: true,
       allowNLP: true,
     })
+    // The token is a bearer credential scoped to one viewer. Never let
+    // a browser or a shared proxy hold on to it.
+    res.set('Cache-Control', 'no-store')
     res.json({ token })
   } catch (err) {
     console.error('mint admin token:', err)
@@ -392,7 +395,7 @@ app.get('/api/embed-token/admin', async (_req, res) => {
 })
 
 // Customer embed: token scoped to the actor's tenant.
-app.get('/api/embed-token/customer', async (req, res) => {
+app.post('/api/embed-token/customer', async (req, res) => {
   const me = actor(req)
   if (!me) {
     res.status(401).send('unknown actor')
@@ -410,6 +413,9 @@ app.get('/api/embed-token/customer', async (req, res) => {
       allowDSLInput: true,
       allowNLP: true,
     })
+    // The token is a bearer credential scoped to one viewer. Never let
+    // a browser or a shared proxy hold on to it.
+    res.set('Cache-Control', 'no-store')
     res.json({ token })
   } catch (err) {
     console.error(`mint customer token (tenant=${me.tenantId}):`, err)

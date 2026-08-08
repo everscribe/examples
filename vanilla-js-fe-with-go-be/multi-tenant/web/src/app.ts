@@ -398,6 +398,7 @@ function buildCustomerEmbed(): AuditTrailEl {
   // the actor's tenant.
   audit.onTokenExpired = async () => {
     const res = await fetch('/api/embed-token/customer', {
+      method: 'POST',
       headers: { 'X-Demo-Actor': getActorId() },
     })
     if (!res.ok) throw new Error(`mint failed: ${res.status}`)

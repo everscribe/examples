@@ -284,7 +284,7 @@ app.post('/api/secrets/:id/expire', (req, res) => {
   res.status(204).send()
 })
 
-app.get('/api/embed-token', async (_req, res) => {
+app.post('/api/embed-token', async (_req, res) => {
   try {
     const token = await minter.mintToken({
       expiresIn: 60 * 60 * 1000, // 1 hour
@@ -294,6 +294,9 @@ app.get('/api/embed-token', async (_req, res) => {
       allowDSLInput: true,
       allowNLP: true,
     })
+    // The token is a bearer credential scoped to one viewer. Never let
+    // a browser or a shared proxy hold on to it.
+    res.set('Cache-Control', 'no-store')
     res.json({ token })
   } catch (err) {
     console.error('mint token:', err)

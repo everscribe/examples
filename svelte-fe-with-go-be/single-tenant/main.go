@@ -173,7 +173,7 @@ func main() {
 	apiMux.HandleFunc("POST /api/secrets/{id}/rotate", rotateSecret(v))
 	apiMux.HandleFunc("POST /api/secrets/{id}/share", shareSecret(v, users))
 	apiMux.HandleFunc("POST /api/secrets/{id}/expire", expireSecret(v))
-	apiMux.HandleFunc("GET /api/embed-token", embedToken(mint))
+	apiMux.HandleFunc("POST /api/embed-token", embedToken(mint))
 
 	auditMW := event.Middleware(event.Options{
 		ActorResolver: actorResolver(users),
@@ -483,6 +483,9 @@ func embedToken(m *minter.Client) http.HandlerFunc {
 			http.Error(w, "could not mint token", http.StatusBadGateway)
 			return
 		}
+		// The token is a bearer credential scoped to one viewer. Never
+		// let a browser or a shared proxy hold on to it.
+		w.Header().Set("Cache-Control", "no-store")
 		writeJSON(w, http.StatusOK, map[string]string{"token": token})
 	}
 }

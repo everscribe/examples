@@ -319,6 +319,7 @@ export function App() {
                   // fetcher only sends `credentials: 'include'`, so we
                   // need this callback to attach our header.
                   const res = await fetch('/api/embed-token/customer', {
+                    method: 'POST',
                     headers: { 'X-Demo-Actor': getActorId() },
                   })
                   if (!res.ok) throw new Error(`mint failed: ${res.status}`)

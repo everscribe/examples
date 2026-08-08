@@ -16,7 +16,7 @@ use std::sync::{Arc, Mutex};
 use std::time::Duration;
 
 use axum::extract::{Path, State};
-use axum::http::StatusCode;
+use axum::http::{header, StatusCode};
 use axum::response::{IntoResponse, Response};
 use axum::routing::{delete, get, post};
 use axum::{Json, Router};
@@ -330,7 +330,10 @@ async fn embed_token(State(st): State<AppState>) -> Response {
         ..Default::default()
     };
     match st.minter.mint_token(&opts).await {
-        Ok(token) => Json(json!({ "token": token })).into_response(),
+        // The token is a bearer credential scoped to one viewer. Never let a
+        // browser or a shared proxy hold on to it.
+        Ok(token) => ([(header::CACHE_CONTROL, "no-store")], Json(json!({ "token": token })))
+            .into_response(),
         Err(err) => {
             eprintln!("mint token: {err}");
             (StatusCode::BAD_GATEWAY, "could not mint token").into_response()
@@ -369,7 +372,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .route("/secrets/:id/share", post(share))
         .route("/secrets/:id/expire", post(expire))
         .route("/secrets/:id", delete(revoke))
-        .route("/embed-token", get(embed_token))
+        .route("/embed-token", post(embed_token))
         .layer(EverscribeLayer::new(rec, move |p: &Parts| resolve_actor(p, &users_for_resolver)))
         .with_state(state);
 

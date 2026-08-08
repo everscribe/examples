@@ -307,7 +307,7 @@ async def expire(secret_id: str, request: Request) -> Response:
     return Response(status_code=204)
 
 
-@app.get("/api/embed-token")
+@app.post("/api/embed-token")
 async def embed_token() -> Response:
     try:
         token = minter.mint_token(
@@ -320,7 +320,9 @@ async def embed_token() -> Response:
                 allow_nlp=True,
             )
         )
-        return JSONResponse({"token": token})
+        # The token is a bearer credential scoped to one viewer. Never let
+        # a browser or a shared proxy hold on to it.
+        return JSONResponse({"token": token}, headers={"Cache-Control": "no-store"})
     except Exception as err:  # noqa: BLE001 - demo: surface any mint failure
         print("mint token:", err)
         return PlainTextResponse("could not mint token", status_code=502)
