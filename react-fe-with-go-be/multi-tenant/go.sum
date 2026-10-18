@@ -11,6 +11,10 @@ github.com/cloudwego/iasm v0.2.0/go.mod h1:8rXZaNYT2n95jn+zTI1sDr+IgcD2GVs0nlbbQ
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
+github.com/everscribe/sdk-go v0.1.0 h1:2oRs52kFBWIrZVt/CAK6UVdcpcS4IBoYf/dqEuDU/4c=
+github.com/everscribe/sdk-go v0.1.0/go.mod h1:IgDBAQcwsnBmHi9H3OwATM/k7OMUHglALJXho/xFxRU=
+github.com/fuskovic/env v1.0.2 h1:Hc4libTdTQh5Wd/l9izUvITksxJDptsvUHh2dH/OliY=
+github.com/fuskovic/env v1.0.2/go.mod h1:Jpp6flotzTYjjpERlC3KS8qk01Ry6EyoDaBJt+ID8Pk=
 github.com/fxamacker/cbor/v2 v2.9.2 h1:X4Ksno9+x3cz0TZv69ec1hxP/+tymuR8PXQJyDwfh78=
 github.com/fxamacker/cbor/v2 v2.9.2/go.mod h1:vM4b+DJCtHn+zz7h3FFp/hDAI9WNWCsZj23V5ytsSxQ=
 github.com/gabriel-vasile/mimetype v1.4.3 h1:in2uUcidCuFcDKtdcBxlR0rJ1+fsokWf+uqxgUFjbI0=

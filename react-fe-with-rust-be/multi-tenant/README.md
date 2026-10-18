@@ -68,7 +68,7 @@ On the backend:
 | Concern            | Node multi                                          | Rust multi                                                        |
 |--------------------|-----------------------------------------------------|------------------------------------------------------------------|
 | HTTP layer         | Express                                             | axum (tokio)                                                     |
-| SDK                | `@everscribe/sdk-node`                              | `everscribe` (`path = "../../../sdk-rust"`, `features = ["axum"]`)|
+| SDK                | `@everscribe/sdk-node`                              | `everscribe` (crates.io, `features = ["axum"]`)|
 | Audit middleware   | `expressMiddleware({ recorder, resolveActor })`    | `.layer(EverscribeLayer::new(recorder, resolve_actor))`         |
 | Per-event tenant   | `req.event!.tenantId = me.tenantId`                | `ev.with(|e| e.tenant_id = me.tenant_id.clone())`               |
 | Token mint         | `await minter.mintToken({ tenantId: ... })`        | `minter.mint_token(&TokenOptions { tenant_id, .. }).await`       |

@@ -20,9 +20,8 @@ cp .env.example .env
 cargo run                                        # serves API + static frontend/dist
 ```
 
-Open <http://localhost:9000>. One process, one port. The SDK is a path
-dependency on the sibling repo (`everscribe = { path = "../../../sdk-rust" }`),
-the same way the Node example uses `file:../../../sdk-node`.
+Open <http://localhost:9000>. One process, one port. The SDK comes from
+crates.io (`everscribe = { version = "0.1.1", features = ["axum"] }`).
 
 ## Run (development, with HMR)
 
@@ -46,7 +45,7 @@ The frontend is unchanged. On the backend:
 | Concern            | Node variant                                        | Rust variant                                                        |
 |--------------------|-----------------------------------------------------|--------------------------------------------------------------------|
 | HTTP layer         | Express                                             | axum (tokio)                                                       |
-| SDK package        | `@everscribe/sdk-node`                              | `everscribe` (`path = "../../../sdk-rust"`, `features = ["axum"]`)  |
+| SDK package        | `@everscribe/sdk-node`                              | `everscribe` (crates.io, `features = ["axum"]`)  |
 | Audit middleware   | `expressMiddleware({ recorder, resolveActor })`    | `.layer(EverscribeLayer::new(recorder, resolve_actor))`            |
 | Per-request event  | `req.event!`                                        | the `CurrentEvent` extractor (`event.with(|e| ...)`)              |
 | Record idiom       | Set `req.event!.action`; middleware auto-records    | Set `action` on `CurrentEvent`; the layer auto-records on finish   |

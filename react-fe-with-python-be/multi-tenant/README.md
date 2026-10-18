@@ -73,7 +73,7 @@ On the backend:
 | Concern            | Node multi                                          | Python multi                                                              |
 |--------------------|-----------------------------------------------------|---------------------------------------------------------------------------|
 | HTTP layer         | Express                                             | FastAPI (ASGI)                                                            |
-| SDK                | `@everscribe/sdk-node`                             | `everscribe` (`-e ../../../sdk-python`)                                    |
+| SDK                | `@everscribe/sdk-node`                             | `everscribe[fastapi]` (PyPI)                                    |
 | Audit middleware   | `expressMiddleware({ recorder, resolveActor })`    | `app.add_middleware(EverscribeMiddleware, recorder=rec, resolve_actor=...)` |
 | Per-event tenant   | `req.event!.tenantId = me.tenantId`                | `current_event().tenant_id = me.tenant_id`                                |
 | Token mint         | `await minter.mintToken({ tenantId: ... })`        | `minter.mint_token(TokenOptions(tenant_id=...))`                           |

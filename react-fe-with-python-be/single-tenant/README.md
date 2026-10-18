@@ -24,9 +24,7 @@ python backend/app.py                    # serves API + static frontend/dist
 
 Open <http://localhost:9000>. One process, one port.
 
-`requirements.txt` installs the SDK editable from the sibling repo
-(`-e ../../../sdk-python`), the same way the Node example uses
-`file:../../../sdk-node`.
+`requirements.txt` installs the SDK from PyPI (`everscribe[fastapi]`).
 
 ## Run (development, with HMR)
 
@@ -50,7 +48,7 @@ The frontend is unchanged. On the backend:
 | Concern            | Node variant                                                        | Python variant                                                            |
 |--------------------|---------------------------------------------------------------------|---------------------------------------------------------------------------|
 | HTTP layer         | Express                                                             | FastAPI (ASGI)                                                            |
-| SDK package        | `@everscribe/sdk-node`                                              | `everscribe` (`-e ../../../sdk-python`)                                    |
+| SDK package        | `@everscribe/sdk-node`                                              | `everscribe[fastapi]` (PyPI)                                    |
 | Audit middleware   | `expressMiddleware({ recorder, resolveActor })`                    | `app.add_middleware(EverscribeMiddleware, recorder=rec, resolve_actor=...)` |
 | Per-request event  | `req.event!` (installed by the middleware)                         | `current_event()` (from `everscribe.asgi`)                                |
 | Record idiom       | Set `req.event!.action`; middleware auto-records on response finish | Set `current_event().action`; middleware auto-records on response finish  |

@@ -11,7 +11,7 @@
     "start": "tsx backend/index.ts"
   },
   "dependencies": {
-    "@everscribe/sdk-node": "file:../../../sdk-node",
+    "@everscribe/sdk-node": "^0.1.0",
     "dotenv": "^16.4.0",
     "express": "^5.0.0"
   },

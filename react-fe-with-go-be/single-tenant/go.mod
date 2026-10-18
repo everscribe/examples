@@ -3,8 +3,8 @@ module github.com/everscribe/examples/react-fe-with-go-be/single-tenant
 go 1.25.0
 
 require (
-	github.com/everscribe/sdk-go v0.0.0
-	github.com/fuskovic/env v0.0.0
+	github.com/everscribe/sdk-go v0.1.0
+	github.com/fuskovic/env v1.0.2
 )
 
 require (
@@ -51,9 +51,4 @@ require (
 	google.golang.org/grpc v1.68.0 // indirect
 	google.golang.org/protobuf v1.34.2 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-)
-
-replace (
-	github.com/everscribe/sdk-go => ../../../sdk-go
-	github.com/fuskovic/env => ../../../../fuskovic/env
 )
